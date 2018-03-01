@@ -1,0 +1,18 @@
+<resources>
+    <string name="app_name">1000 books</string>
+    <string name="your_name">your name</string>
+    <string name="your_city">your city</string>
+    <string name="your_phone">your phone number</string>
+    <string name="empty_field">field cannot be blank</string>
+    <string name="image_book">book\'s cover</string>
+    <string name="no_data">No book</string>
+    <string name="add_success">Adding item success</string>
+    <string name="update_success">Edit item success</string>
+    <string name="delete_success">Delete item success</string>
+    <string name="at_least_200">At least 200 characters</string>
+    <string name="btn_ok">OK</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="cancel_update_confirm">Cancel your update</string>
+    <string name="delete_confirm">Delete your book</string>
+</resources>

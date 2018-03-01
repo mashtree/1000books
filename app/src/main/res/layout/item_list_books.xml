@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/list_books"
+    android:padding="@dimen/activity_horizontal_margin">
+    <ImageView
+        android:layout_width="55dp"
+        android:layout_height="wrap_content"
+        android:id="@+id/img_item_cover"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_marginEnd="@dimen/activity_vertical_margin"
+        tools:src="@android:color/darker_gray"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/img_item_cover"
+        android:layout_toEndOf="@+id/img_item_cover"
+        android:layout_centerVertical="true"
+        android:orientation="vertical">
+        <TextView
+            android:id="@+id/tv_title"
+            style="@style/TextContent.Title"
+            tools:text="Harry Porter"
+            />
+        <TextView
+            android:id="@+id/tv_author"
+            style="@style/TextContent"
+            tools:text="JK Rowling"
+            />
+        <TextView
+            android:id="@+id/tv_rating"
+            style="@style/TextContent.Release"
+            tools:text="3 out of 5"
+            />
+    </LinearLayout>
+
+</RelativeLayout>
