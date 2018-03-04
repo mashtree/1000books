@@ -8,11 +8,14 @@ import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.DateFormat;
@@ -40,6 +43,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     @BindView(R.id.edt_review) EditText edtReview;
     @BindView(R.id.btn_ok) Button btnOk;
     //@BindView(R.id.btn_cancel) Button btnCancel;
+    @BindView(R.id.spinner_rating) Spinner spRating;
 
     public static String EXTRA_BOOK = "extra_note";
     public static String EXTRA_POSITION = "extra_position";
@@ -64,6 +68,10 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
         ButterKnife.bind(this);
 
         btnOk.setOnClickListener(this);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.rating_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spRating.setAdapter(adapter);
 
         helper = new BookHelper(this);
         helper.open();
@@ -82,16 +90,23 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
         String btTitle = null;
 
         if(isEdit){
-            actionBarTitle = "Edit";
-            btTitle = "Update";
+            actionBarTitle = getString(R.string.edit);
+            btTitle = getString(R.string.update);
             edtTitle.setText(book.getTitle());
             edtAuthor.setText(book.getAuthor());
             edtPublisher.setText(book.getPublisher());
             edtGetFrom.setText(book.getGet_from());
             edtReview.setText(book.getReview());
+            for (int i = 0; i < spRating.getCount(); i++) {
+                if (Integer.parseInt(spRating.getItemAtPosition(i).toString())==book.getRating()) {
+                    spRating.setSelection(i);
+                    break;
+                }
+            }
+
         }else{
-            actionBarTitle = "Add";
-            btTitle = "Save";
+            actionBarTitle = getString(R.string.add);
+            btTitle = getString(R.string.save);
         }
 
         //btnCancel.setOnClickListener(this);
@@ -111,6 +126,8 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             String publisher = edtPublisher.getText().toString().trim();
             String getFrom = edtGetFrom.getText().toString().trim();
             String review = edtReview.getText().toString().trim();
+            int rating = Integer.parseInt(spRating.getSelectedItem().toString());
+            Log.d(FormAddUpdateBookActivity.class.getSimpleName(), "onClick: selected item = "+String.valueOf(rating));
 
             boolean isEmpty = false;
 
@@ -146,7 +163,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
                 values.put(PUBLISHER, publisher);
                 values.put(GET_FROM, getFrom);
                 values.put(REVIEW, review);
-                values.put(RATING, "0");
+                values.put(RATING, String.valueOf(rating));
                 values.put(COVER, "");
                 if (isEdit) {
                     getContentResolver().update(getIntent().getData(), values, null, null);
@@ -170,6 +187,11 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
         }
     }
 
+    /**
+     * options menu
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         if(isEdit){
@@ -178,10 +200,16 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
         return super.onCreateOptionsMenu(menu);
     }
 
+    /**
+     * handle option menu items action
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
         int id = item.getItemId();
         switch (id){
+            // when user press the delete menu
             case R.id.action_delete:
                 isDelete = true;
                 showAlertDialog(ALERT_DIALOG_DELETE);
@@ -196,6 +224,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     final int ALERT_DIALOG_CLOSE = 10;
     final int ALERT_DIALOG_DELETE = 20;
 
+    // pressing android back button
     @Override
     public void onBackPressed(){
         if(isEdit){
@@ -203,6 +232,10 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
         }
     }
 
+    /**
+     * displaying alert dialog, the title and message depend on the argument
+     * @param type
+     */
     private void showAlertDialog(int type){
         final boolean isDialogClose = type == ALERT_DIALOG_CLOSE;
         String dialogTitle = null, dialogMessage = null;

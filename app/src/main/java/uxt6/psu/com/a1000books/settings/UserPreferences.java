@@ -38,7 +38,12 @@ public class UserPreferences {
     }
 
     public UserPreferences setToken(String token){
-        //editor.putString(context.getString(R.string.your_name),token);
+        editor.putString(context.getString(R.string.your_regnumber), token);
+        return this;
+    }
+
+    public UserPreferences setPicture(String url){
+        editor.putString(context.getString(R.string.your_picture), url);
         return this;
     }
 
@@ -59,7 +64,10 @@ public class UserPreferences {
     }
 
     public String getToken(){
-        //return prefs.getString(context.getString(R.string.your_name),"");
-        return null;
+        return prefs.getString(context.getString(R.string.your_regnumber),"");
+    }
+
+    public String getPicture(){
+        return prefs.getString(context.getString(R.string.your_picture),"");
     }
 }

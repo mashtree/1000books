@@ -15,4 +15,18 @@
     <string name="cancel">Cancel</string>
     <string name="cancel_update_confirm">Cancel your update</string>
     <string name="delete_confirm">Delete your book</string>
+    <string name="add">Add</string>
+    <string name="edit">Edit</string>
+    <string name="update">Update</string>
+    <string name="save">Save</string>
+    <string name="rating">rating</string>
+    <string name="your_picture">your picture</string>
+    <string name="your_regnumber">your register number</string>
+    <string-array name="rating_array">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
 </resources>
