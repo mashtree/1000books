@@ -1,55 +1,96 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="0dp"
-    android:layout_marginRight="0dp"
-    android:baselineAligned="false">
-    <android.support.v7.widget.CardView
+    android:id="@+id/cv_item_note"
+    android:layout_gravity="center"
+    android:layout_marginTop="4dp"
+    android:layout_marginBottom="4dp"
+    android:layout_marginLeft="8dp"
+    android:layout_marginRight="8dp"
+    card_view:cardCornerRadius="4dp">
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/cv_item_note"
-        app:cardCornerRadius="4dp"
-        app:cardElevation="4dp"
-        app:cardUseCompatPadding="true"
-        app:cardMaxElevation="4dp">
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.3"
-            >
+        android:layout_height="200dp"
+        android:padding="8dp">
+
             <ImageView
                 android:id="@+id/iv_cover"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_width="150dp"
+                android:layout_height="220dp"
+                android:scaleType="centerCrop"
                 android:contentDescription="@string/image_book"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"/>
-        </LinearLayout>
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.7"
-            android:orientation="vertical"
-            android:paddingLeft="6dp"
-            >
+                android:layout_marginBottom="4dp"
+                tools:src="@drawable/backcover"/>
             <TextView
                 android:id="@+id/tv_title"
-                style="@style/TextContent.Title"/>
+                android:layout_toRightOf="@+id/iv_cover"
+                android:layout_toEndOf="@+id/iv_cover"
+                style="@style/TextContent.Title"
+                tools:text="Title"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"/>
             <TextView
                 android:id="@+id/tv_author"
+                android:layout_toRightOf="@+id/iv_cover"
+                android:layout_toEndOf="@+id/iv_cover"
                 style="@style/TextContent.Desc"
+                tools:text="Author"
+                android:layout_below="@+id/tv_title"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 />
             <TextView
                 android:id="@+id/tv_rate"
+                android:layout_toRightOf="@+id/iv_cover"
+                android:layout_toEndOf="@+id/iv_cover"
                 style="@style/TextContent.Release"
+                tools:text="3"
+                android:layout_below="@+id/tv_author"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 />
             <TextView
                 android:id="@+id/tv_publisher"
+                android:layout_toRightOf="@+id/iv_cover"
+                android:layout_toEndOf="@+id/iv_cover"
+                android:layout_below="@+id/tv_rate"
                 style="@style/TextContent.Release"
+                tools:text="publisher"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_toRightOf="@+id/iv_cover"
+            android:layout_toEndOf="@+id/iv_cover"
+            android:layout_marginLeft="@dimen/activity_horizontal_margin"
+            android:layout_marginStart="@dimen/activity_horizontal_margin"
+            android:orientation="horizontal">
+            <Button
+                android:id="@+id/btn_edit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="@string/edit"
+                android:layout_weight="1"/>
+            <Button
+                android:id="@+id/btn_upload"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                style="@style/Widget.AppCompat.Button.Colored"
+                android:text="@string/upload"
+                android:layout_weight="1"/>
         </LinearLayout>
-    </android.support.v7.widget.CardView>
-</LinearLayout>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

@@ -22,6 +22,9 @@
     <string name="rating">rating</string>
     <string name="your_picture">your picture</string>
     <string name="your_regnumber">your register number</string>
+    <string name="your_id">id</string>
+    <string name="detail">detail</string>
+    <string name="upload">upload</string>
     <string-array name="rating_array">
         <item>1</item>
         <item>2</item>

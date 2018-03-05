@@ -22,6 +22,11 @@ public class UserPreferences {
         this.context = context;
     }
 
+    public UserPreferences setReaderServerId(int id){
+        editor.putInt(context.getString(R.string.your_id),id);
+        return this;
+    }
+
     public UserPreferences setReaderName(String reader){
         editor.putString(context.getString(R.string.your_name),reader);
         return this;
@@ -49,6 +54,10 @@ public class UserPreferences {
 
     public void doCommit(){
         editor.commit();
+    }
+
+    public int getReaderServerId(){
+        return prefs.getInt(context.getString(R.string.your_id),0);
     }
 
     public String getReaderName(){

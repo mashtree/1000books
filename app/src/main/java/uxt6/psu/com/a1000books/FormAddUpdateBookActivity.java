@@ -1,9 +1,13 @@
 package uxt6.psu.com.a1000books;
 
 import android.content.ContentValues;
+import android.content.Context;
+import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.Bitmap;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,9 +19,13 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +36,9 @@ import uxt6.psu.com.a1000books.db.BookHelper;
 import uxt6.psu.com.a1000books.db.DatabaseContract;
 import uxt6.psu.com.a1000books.entity.Book;
 import uxt6.psu.com.a1000books.utility.BaseDialog;
+import uxt6.psu.com.a1000books.utility.ImageSaver;
 
+import static uxt6.psu.com.a1000books.MainActivity.getMimeType;
 import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.*;
 
 /**
@@ -44,6 +54,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     @BindView(R.id.btn_ok) Button btnOk;
     //@BindView(R.id.btn_cancel) Button btnCancel;
     @BindView(R.id.spinner_rating) Spinner spRating;
+    @BindView(R.id.img_cover) ImageView imgCover;
 
     public static String EXTRA_BOOK = "extra_note";
     public static String EXTRA_POSITION = "extra_position";
@@ -68,6 +79,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
         ButterKnife.bind(this);
 
         btnOk.setOnClickListener(this);
+        imgCover.setOnClickListener(this);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.rating_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -97,6 +109,11 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             edtPublisher.setText(book.getPublisher());
             edtGetFrom.setText(book.getGet_from());
             edtReview.setText(book.getReview());
+            Bitmap bitmap = new ImageSaver(this)
+                    .setFileName(book.getCover())
+                    .setDirectoryName("bookCovers")
+                    .load();
+            imgCover.setImageBitmap(bitmap);
             for (int i = 0; i < spRating.getCount(); i++) {
                 if (Integer.parseInt(spRating.getItemAtPosition(i).toString())==book.getRating()) {
                     spRating.setSelection(i);
@@ -164,7 +181,13 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
                 values.put(GET_FROM, getFrom);
                 values.put(REVIEW, review);
                 values.put(RATING, String.valueOf(rating));
-                values.put(COVER, "");
+                values.put(COVER, title+filename+"."+extension);
+                imgCover.buildDrawingCache();
+                Bitmap bitmap = imgCover.getDrawingCache();
+                new ImageSaver(this)
+                        .setFileName(title+filename+"."+extension)
+                        .setDirectoryName("bookCovers")
+                        .save(bitmap);
                 if (isEdit) {
                     getContentResolver().update(getIntent().getData(), values, null, null);
                     setResult(RESULT_UPDATE);
@@ -175,6 +198,37 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
                     setResult(RESULT_ADD);
                     finish();
                 }
+            }
+        }else if(id==R.id.img_cover){
+            Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI
+            startActivityForResult(i, 100);
+        }
+    }
+
+    private String extension = "png";
+    private String filename;
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+
+            //getting the image Uri
+            Uri imageUri = data.getData();
+
+            try {
+                //getting bitmap object from uri
+                Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                //displaying selected image to imageview
+                imgCover.setImageBitmap(bitmap);
+                extension = getMimeType(this, imageUri);
+                File file= new File(imageUri.getPath());
+                filename = file.getName();
+                //Log.d(MainActivity.class.getSimpleName(), "onActivityResult: file extension = "+filename);
+                //calling the method uploadBitmap to upload image
+                //uploadBitmap(bitmap);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
         }
     }
@@ -250,11 +304,8 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
         // creating and displaying AlertDialog subclass
         // creating an instance and passing this activity that implements BaseDialog.BaseDialogListener
         BaseDialog.getInstance(this)
-                // set dialog's title
                 .setDialogTitle(dialogTitle)
-                // set dialog's message
                 .setDialogMessage(dialogMessage)
-                // displaying the dialog
                 .show();
     }
 

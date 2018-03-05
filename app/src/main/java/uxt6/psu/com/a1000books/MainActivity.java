@@ -181,9 +181,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             Log.d(MainActivity.class.getSimpleName(), "onResponse: "+obj.toString());
                             prefs.setToken(obj.getString("reg_number"))
                                     .setPicture(EndPoints.ROOT_URL+"readers/"+obj.getString("photo"))
+                                    .setReaderServerId(obj.getInt("reader_id"))
                                     .doCommit();
                             //Toast.makeText(getApplicationContext(), prefs.getToken()+"-"+prefs.getPicture(), Toast.LENGTH_SHORT).show();
-                            Log.d(MainActivity.class.getSimpleName(), "uploadBitmap: "+prefs.getToken()+"-"+prefs.getPicture());
+                            Log.d(MainActivity.class.getSimpleName(), "uploadBitmap: "+prefs.getReaderServerId()+"-"+prefs.getToken()+"-"+prefs.getPicture());
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
