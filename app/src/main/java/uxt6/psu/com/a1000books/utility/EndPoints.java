@@ -13,7 +13,7 @@ public class EndPoints {
     public static final String GET_READER_URL = READER_ROOT_URL + "getreader";
     public static final String EDIT_READER_URL = READER_ROOT_URL + "editreader";
     public static final String POST_BOOK_URL = BOOK_ROOT_URL + "postbook";
-    public static final String SEARCH_BOOK_URL = BOOK_ROOT_URL + "search";
-    public static final String GET_BOOK_URL = BOOK_ROOT_URL + "each";
+    public static final String SEARCH_BOOK_URL = BOOK_ROOT_URL + "search&keyword=";
+    public static final String GET_BOOK_URL = BOOK_ROOT_URL + "each&id=";
     public static final String POST_COMMENT_URL = COMMENT_ROOT_URL + "postcomment";
 }

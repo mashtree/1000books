@@ -15,10 +15,10 @@ import android.widget.Toast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import uxt6.psu.com.a1000books.adapter.BookAdapter;
+import uxt6.psu.com.a1000books.adapter.BookCursorAdapter;
 import uxt6.psu.com.a1000books.db.DatabaseContract;
 
-public class BookActivity extends AppCompatActivity
+public class BookActivity extends AppBaseActivity
 implements View.OnClickListener{
 
     @BindView(R.id.rv_your_book)
@@ -29,7 +29,7 @@ implements View.OnClickListener{
     ProgressBar progressBar;
 
     private Cursor list;
-    private BookAdapter adapter;
+    private BookCursorAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +43,7 @@ implements View.OnClickListener{
         progressBar = (ProgressBar) findViewById(R.id.progressbar);
         fabAddBook.setOnClickListener(this);
 
-        adapter = new BookAdapter(this);
+        adapter = new BookCursorAdapter(this);
         adapter.setListBooks(list);
         rvYourBook.setAdapter(adapter);
 

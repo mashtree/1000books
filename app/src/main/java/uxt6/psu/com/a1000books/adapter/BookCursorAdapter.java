@@ -13,7 +13,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import uxt6.psu.com.a1000books.BookDetailActivity;
 import uxt6.psu.com.a1000books.FormAddUpdateBookActivity;
 import uxt6.psu.com.a1000books.R;
 import uxt6.psu.com.a1000books.db.DatabaseContract;
@@ -24,12 +26,12 @@ import uxt6.psu.com.a1000books.utility.ImageSaver;
  * Created by aisyahumar on 2/27/2018.
  */
 
-public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder>{
+public class BookCursorAdapter extends RecyclerView.Adapter<BookCursorAdapter.BookViewHolder>{
 
     private Cursor listBooks;
     private Activity activity;
 
-    public BookAdapter(Activity activity){
+    public BookCursorAdapter(Activity activity){
         this.activity = activity;
     }
 
@@ -48,7 +50,7 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
     }
 
     @Override
-    public void onBindViewHolder(BookViewHolder holder, int position) {
+    public void onBindViewHolder(final BookViewHolder holder, int position) {
         final Book book = getItem(position);
         holder.tvTitle.setText(book.getTitle());
         holder.tvAuthor.setText(book.getAuthor());
@@ -71,10 +73,20 @@ public class BookAdapter extends RecyclerView.Adapter<BookAdapter.BookViewHolder
         holder.btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Toast.makeText(activity, "Nothing to do with "+book.getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
-
+        holder.cvNote.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(activity, BookDetailActivity.class);
+                intent.putExtra(BookDetailActivity.EXTRA_BOOK, book);
+                activity.startActivity(intent);
+            }
+        });
+        if(book.getServerId()>0){
+            holder.btnUpload.setVisibility(View.GONE);
+        }
     }
 
     @Override

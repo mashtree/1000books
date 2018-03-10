@@ -44,25 +44,27 @@
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 />
+
+            <TextView
+                android:id="@+id/tv_publisher"
+                android:layout_toRightOf="@+id/iv_cover"
+                android:layout_toEndOf="@+id/iv_cover"
+                android:layout_below="@+id/tv_author"
+                style="@style/TextContent.Release"
+                tools:text="publisher"
+                android:layout_marginBottom="8dp"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                />
             <TextView
                 android:id="@+id/tv_rate"
                 android:layout_toRightOf="@+id/iv_cover"
                 android:layout_toEndOf="@+id/iv_cover"
                 style="@style/TextContent.Release"
                 tools:text="3"
-                android:layout_below="@+id/tv_author"
+                android:layout_below="@+id/tv_publisher"
                 android:layout_marginBottom="8dp"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                />
-            <TextView
-                android:id="@+id/tv_publisher"
-                android:layout_toRightOf="@+id/iv_cover"
-                android:layout_toEndOf="@+id/iv_cover"
-                android:layout_below="@+id/tv_rate"
-                style="@style/TextContent.Release"
-                tools:text="publisher"
-                android:layout_marginBottom="8dp"
+                android:drawableLeft="@drawable/ic_star_yellow_24dp"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
                 />

@@ -3,6 +3,9 @@ package uxt6.psu.com.a1000books.entity;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
+
+import org.json.JSONObject;
 
 import uxt6.psu.com.a1000books.db.DatabaseContract;
 import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.*;
@@ -15,6 +18,7 @@ public class Book implements Parcelable {
 
     private int id;
     private String title;
+    private int serverId;
     private String review;
     private String author;
     private String publisher;
@@ -22,12 +26,36 @@ public class Book implements Parcelable {
     private int rating;
     private String cover;
     private String created_at;
+    private String reader;
+
+    private final String TAG = "BOOK";
 
     public Book(){}
+
+    public Book(JSONObject object){
+        try{
+            id = object.getInt("id");
+            title = object.getString("title");
+            serverId = object.getInt("id");
+            review = object.getString("review");
+            author = object.getString("author");
+            publisher = object.getString("publisher");
+            get_from = object.getString("get_from");
+            rating = object.getInt("rating");
+            cover = object.getString("cover");
+            created_at = object.getString("created_at");
+            reader = object.getString("reader_name");
+        }catch(Exception e){
+            Log.e(TAG, "Error on constructor");
+            e.printStackTrace();
+        }
+
+    }
 
     public Book(Cursor cursor){
         id = DatabaseContract.getColumnInt(cursor, _ID);
         title = DatabaseContract.getColumnString(cursor, TITLE);
+        serverId = DatabaseContract.getColumnInt(cursor, SERVER_ID);
         review = DatabaseContract.getColumnString(cursor, REVIEW);;
         author = DatabaseContract.getColumnString(cursor, AUTHOR);;
         publisher = DatabaseContract.getColumnString(cursor, PUBLISHER);;
@@ -35,11 +63,13 @@ public class Book implements Parcelable {
         rating = DatabaseContract.getColumnInt(cursor, RATING);;
         cover = DatabaseContract.getColumnString(cursor, COVER);;
         created_at = DatabaseContract.getColumnString(cursor, DATE);;
+        reader = "";
     }
 
     protected Book(Parcel in) {
         id = in.readInt();
         title = in.readString();
+        serverId = in.readInt();
         author = in.readString();;
         publisher = in.readString();;
         review = in.readString();;
@@ -47,6 +77,7 @@ public class Book implements Parcelable {
         cover = in.readString();;
         rating = in.readInt();;
         created_at = in.readString();;
+        reader = "";
     }
 
     public static final Creator<Book> CREATOR = new Creator<Book>() {
@@ -70,6 +101,7 @@ public class Book implements Parcelable {
     public void writeToParcel(Parcel parcel, int flags) {
         parcel.writeInt(id);
         parcel.writeString(title);
+        parcel.writeInt(serverId);
         parcel.writeString(author);
         parcel.writeString(publisher);
         parcel.writeString(review);
@@ -77,6 +109,7 @@ public class Book implements Parcelable {
         parcel.writeString(cover);
         parcel.writeString(created_at);
         parcel.writeInt(rating);
+        parcel.writeString(reader);
     }
 
     public int getId() {
@@ -149,5 +182,21 @@ public class Book implements Parcelable {
 
     public void setCreated_at(String created_at) {
         this.created_at = created_at;
+    }
+
+    public int getServerId() {
+        return serverId;
+    }
+
+    public void setServerId(int serverId) {
+        this.serverId = serverId;
+    }
+
+    public String getReader() {
+        return reader;
+    }
+
+    public void setReader(String reader) {
+        this.reader = reader;
     }
 }

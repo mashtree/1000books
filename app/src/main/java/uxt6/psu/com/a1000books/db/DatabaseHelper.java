@@ -21,10 +21,12 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
                     +" %s TEXT, " //should NOT NULL
                     +" %s TEXT, " //should NOT NULL
                     +" %s TEXT, " //should NOT NULL
+                    +" %s TEXT, " //should NOT NULL
                     +" %s TEXT)", //should NOT NULL
             DatabaseContract.TABLE_BOOK,
             DatabaseContract.BookColumns._ID,
             DatabaseContract.BookColumns.TITLE,
+            DatabaseContract.BookColumns.SERVER_ID,
             DatabaseContract.BookColumns.AUTHOR,
             DatabaseContract.BookColumns.PUBLISHER,
             DatabaseContract.BookColumns.GET_FROM,

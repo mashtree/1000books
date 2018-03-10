@@ -3,11 +3,25 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_eng_ind"
-            android:title="eng" />
+            android:id="@+id/nav_your_book"
+            android:icon="@drawable/ic_collections_bookmark_black_24dp"
+            android:title="Your book" />
         <item
-            android:id="@+id/nav_ind_end"
-            android:title="ind" />
+            android:id="@+id/nav_want_to_read"
+            android:icon="@drawable/ic_format_list_numbered_black_24dp"
+            android:title="Want to read" />
+        <item
+            android:id="@+id/nav_search"
+            android:icon="@drawable/ic_find_in_page_black_24dp"
+            android:title="search" />
+        <item
+            android:id="@+id/nav_message"
+            android:icon="@drawable/ic_message_black_24dp"
+            android:title="message" />
+        <item
+            android:id="@+id/nav_your_profile"
+            android:icon="@drawable/ic_person_black_24dp"
+            android:title="your profile" />
     </group>
 
 </menu>

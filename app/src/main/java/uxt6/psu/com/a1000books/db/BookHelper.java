@@ -49,6 +49,7 @@ public class BookHelper {
                 book = new Book();
                 book.setId(cursor.getInt(cursor.getColumnIndexOrThrow(_ID)));
                 book.setTitle(cursor.getString(cursor.getColumnIndexOrThrow(TITLE)));
+                book.setServerId(cursor.getInt(cursor.getColumnIndexOrThrow(SERVER_ID)));
                 book.setCover(cursor.getString(cursor.getColumnIndexOrThrow(COVER)));
                 book.setReview(cursor.getString(cursor.getColumnIndexOrThrow(REVIEW)));
                 book.setAuthor(cursor.getString(cursor.getColumnIndexOrThrow(AUTHOR)));
@@ -68,6 +69,7 @@ public class BookHelper {
     public long insert(Book book){
         ContentValues initialValues =  new ContentValues();
         initialValues.put(TITLE, book.getTitle());
+        initialValues.put(SERVER_ID, book.getServerId());
         initialValues.put(AUTHOR, book.getAuthor());
         initialValues.put(PUBLISHER, book.getPublisher());
         initialValues.put(REVIEW, book.getReview());
@@ -81,6 +83,7 @@ public class BookHelper {
     public long update(Book book){
         ContentValues args = new ContentValues();
         args.put(TITLE, book.getTitle());
+        args.put(SERVER_ID, book.getServerId());
         args.put(AUTHOR, book.getAuthor());
         args.put(PUBLISHER, book.getPublisher());
         args.put(REVIEW, book.getReview());

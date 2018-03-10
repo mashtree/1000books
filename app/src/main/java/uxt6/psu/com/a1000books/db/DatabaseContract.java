@@ -16,6 +16,8 @@ public class DatabaseContract {
     public static final class BookColumns implements BaseColumns {
         //Book title
         public static String TITLE = "title";
+        //Server id
+        public static String SERVER_ID= "server_id";
         //Book review
         public static String REVIEW = "review";
         //Book author

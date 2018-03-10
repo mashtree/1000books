@@ -112,8 +112,20 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
-        Intent intent = new Intent(AppBaseActivity.this, YourBookActivity.class);
+        Intent intent = null;
         switch (item.getItemId()) {
+            case R.id.nav_your_book:
+                intent = new Intent(AppBaseActivity.this, BookActivity.class);
+                break;
+            case R.id.nav_search:
+                intent = new Intent(AppBaseActivity.this, SearchBookActivity.class);
+                break;
+            case R.id.nav_want_to_read:
+                break;
+            case R.id.nav_message:
+                break;
+            case R.id.nav_your_profile:
+                break;
             default:
                 // do nothing at this moment
                 break;

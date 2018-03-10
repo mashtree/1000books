@@ -20,6 +20,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RatingBar;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -55,6 +56,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     //@BindView(R.id.btn_cancel) Button btnCancel;
     @BindView(R.id.spinner_rating) Spinner spRating;
     @BindView(R.id.img_cover) ImageView imgCover;
+    @BindView(R.id.ratingBar) RatingBar ratingBar;
 
     public static String EXTRA_BOOK = "extra_note";
     public static String EXTRA_POSITION = "extra_position";
@@ -114,6 +116,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
                     .setDirectoryName("bookCovers")
                     .load();
             imgCover.setImageBitmap(bitmap);
+            ratingBar.setRating(book.getRating());
             for (int i = 0; i < spRating.getCount(); i++) {
                 if (Integer.parseInt(spRating.getItemAtPosition(i).toString())==book.getRating()) {
                     spRating.setSelection(i);
@@ -144,6 +147,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             String getFrom = edtGetFrom.getText().toString().trim();
             String review = edtReview.getText().toString().trim();
             int rating = Integer.parseInt(spRating.getSelectedItem().toString());
+            int rate = (int) ratingBar.getRating();
             Log.d(FormAddUpdateBookActivity.class.getSimpleName(), "onClick: selected item = "+String.valueOf(rating));
 
             boolean isEmpty = false;
@@ -176,11 +180,12 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             if (!isEmpty) {
                 ContentValues values = new ContentValues();
                 values.put(TITLE, title);
+                values.put(SERVER_ID, 0);
                 values.put(AUTHOR, author);
                 values.put(PUBLISHER, publisher);
                 values.put(GET_FROM, getFrom);
                 values.put(REVIEW, review);
-                values.put(RATING, String.valueOf(rating));
+                values.put(RATING, rate);
                 values.put(COVER, title+filename+"."+extension);
                 imgCover.buildDrawingCache();
                 Bitmap bitmap = imgCover.getDrawingCache();

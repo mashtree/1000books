@@ -25,6 +25,10 @@
     <string name="your_id">id</string>
     <string name="detail">detail</string>
     <string name="upload">upload</string>
+    <string name="search">Search</string>
+    <string name="keyword">keyword</string>
+    <string name="collapse">collapse</string>
+    <string name="expand">expand</string>
     <string-array name="rating_array">
         <item>1</item>
         <item>2</item>
