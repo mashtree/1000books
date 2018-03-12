@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="uxt6.psu.com.a1000books.YourProfileActivity">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ryu" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Triyono"
+        android:textColor="@color/colorDicoding"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
+        app:layout_constraintStart_toStartOf="@+id/iv_photo"
+        app:layout_constraintTop_toBottomOf="@+id/iv_photo" />
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="Middletown"
+        android:drawableLeft="@drawable/ic_location_city_black_24dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="717962****"
+        android:drawableLeft="@drawable/ic_local_phone_black_24dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_location"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+
+    <Button
+        android:id="@+id/btn_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/edit"
+        app:layout_constraintStart_toStartOf="@+id/tv_phone"
+        app:layout_constraintTop_toBottomOf="@+id/tv_phone" />
+
+</android.support.constraint.ConstraintLayout>

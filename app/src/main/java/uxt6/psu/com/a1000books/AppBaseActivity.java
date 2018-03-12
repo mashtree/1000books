@@ -121,10 +121,13 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
                 intent = new Intent(AppBaseActivity.this, SearchBookActivity.class);
                 break;
             case R.id.nav_want_to_read:
+                intent = new Intent(AppBaseActivity.this, WantToReadActivity.class);
                 break;
             case R.id.nav_message:
+                intent = new Intent(AppBaseActivity.this, MessageActivity.class);
                 break;
             case R.id.nav_your_profile:
+                intent = new Intent(AppBaseActivity.this, YourProfileActivity.class);
                 break;
             default:
                 // do nothing at this moment

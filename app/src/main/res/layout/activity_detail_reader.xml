@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="uxt6.psu.com.a1000books.DetailReaderActivity">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/iv_photo"
+        android:layout_width="200dp"
+        android:layout_height="200dp"
+        android:layout_marginTop="8dp"
+        android:adjustViewBounds="false"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ryu" />
+
+    <TextView
+        android:id="@+id/tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:textColor="@color/colorDicoding"
+        android:textSize="24sp"
+        android:drawableLeft="@drawable/ic_person_black_24dp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="@+id/iv_photo"
+        app:layout_constraintTop_toBottomOf="@+id/iv_photo" />
+
+    <TextView
+        android:id="@+id/tv_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text=""
+        android:drawableLeft="@drawable/ic_location_city_black_24dp"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/tv_name"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name" />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:drawableLeft="@drawable/ic_local_phone_black_24dp"
+        android:text=""
+        android:textSize="18sp"
+
+        app:layout_constraintStart_toStartOf="@+id/tv_location"
+        app:layout_constraintTop_toBottomOf="@+id/tv_location" />
+
+</android.support.constraint.ConstraintLayout>

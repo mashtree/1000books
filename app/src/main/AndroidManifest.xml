@@ -5,6 +5,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <permission
         android:name="uxt6.psu.com.a1000books.READ_DATABASE"
@@ -53,11 +54,34 @@
             android:writePermission="uxt6.psu.com.a1000books.WRITE_DATABASE" />
 
         <activity android:name=".SearchBookActivity" />
-        <activity android:name=".DetailBookCommentActivity"
+        <activity
+            android:name=".DetailBookCommentActivity"
             android:parentActivityName=".SearchBookActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="uxt6.psu.com.a1000books.SearchBookActivity" /></activity>
+                android:value="uxt6.psu.com.a1000books.SearchBookActivity" />
+        </activity>
+        <activity android:name=".DetailReaderActivity"
+            android:parentActivityName=".DetailBookCommentActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uxt6.psu.com.a1000books.DetailBookCommentActivity" />
+        </activity>
+        <activity android:name=".YourProfileActivity" />
+        <activity android:name=".UpdateProfileActivity"
+            android:parentActivityName=".YourProfileActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uxt6.psu.com.a1000books.YourProfileActivity" />
+        </activity>
+        <activity android:name=".MessageActivity" />
+        <activity android:name=".AddMessageActivity"
+            android:parentActivityName=".MessageActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="uxt6.psu.com.a1000books.MessageActivity" />
+        </activity>
+        <activity android:name=".WantToReadActivity"></activity>
     </application>
 
 </manifest>
