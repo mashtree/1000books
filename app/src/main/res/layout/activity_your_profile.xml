@@ -26,7 +26,7 @@
         android:textColor="@color/colorDicoding"
         android:textSize="24sp"
         android:textStyle="bold"
-        android:drawableLeft="@drawable/ic_person_black_24dp"
+        android:drawableLeft="@drawable/ic_person_black"
         app:layout_constraintStart_toStartOf="@+id/iv_photo"
         app:layout_constraintTop_toBottomOf="@+id/iv_photo" />
 
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="Middletown"
-        android:drawableLeft="@drawable/ic_location_city_black_24dp"
+        android:drawableLeft="@drawable/ic_location_city_black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/tv_name"
         app:layout_constraintTop_toBottomOf="@+id/tv_name" />
@@ -47,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         android:text="717962****"
-        android:drawableLeft="@drawable/ic_local_phone_black_24dp"
+        android:drawableLeft="@drawable/ic_local_phone_black"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/tv_location"
         app:layout_constraintTop_toBottomOf="@+id/tv_location" />

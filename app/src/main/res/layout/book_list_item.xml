@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="100dp"
     android:gravity="top"
     android:id="@+id/list_movies"
+    android:elevation="2dp"
+    android:background="@drawable/bordershadow"
     android:padding="@dimen/activity_horizontal_margin">
     <ImageView
         android:layout_width="55dp"
@@ -37,7 +38,7 @@
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/tv_rating"
-                android:drawableLeft="@drawable/ic_star_red_24dp"
+                android:drawableLeft="@drawable/ic_star_red"
                 style="@style/TextContent.Release"
                 tools:text="3"
                 android:layout_weight="1"

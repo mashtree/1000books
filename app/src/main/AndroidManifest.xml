@@ -20,15 +20,17 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/Theme.AppCompat.Light">
         <activity android:name=".MainActivity">
+
+        </activity>
+        <activity android:name=".BookActivity" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".BookActivity" />
         <activity
             android:name=".FormAddUpdateBookActivity"
             android:parentActivityName=".BookActivity">
@@ -61,27 +63,31 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uxt6.psu.com.a1000books.SearchBookActivity" />
         </activity>
-        <activity android:name=".DetailReaderActivity"
+        <activity
+            android:name=".DetailReaderActivity"
             android:parentActivityName=".DetailBookCommentActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uxt6.psu.com.a1000books.DetailBookCommentActivity" />
         </activity>
         <activity android:name=".YourProfileActivity" />
-        <activity android:name=".UpdateProfileActivity"
+        <activity
+            android:name=".UpdateProfileActivity"
             android:parentActivityName=".YourProfileActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uxt6.psu.com.a1000books.YourProfileActivity" />
         </activity>
         <activity android:name=".MessageActivity" />
-        <activity android:name=".AddMessageActivity"
+        <activity
+            android:name=".AddMessageActivity"
             android:parentActivityName=".MessageActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="uxt6.psu.com.a1000books.MessageActivity" />
         </activity>
-        <activity android:name=".WantToReadActivity"></activity>
+        <activity android:name=".WantToReadActivity" />
+        <activity android:name=".BooksActivity"></activity>
     </application>
 
 </manifest>

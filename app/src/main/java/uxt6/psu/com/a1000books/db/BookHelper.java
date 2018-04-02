@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,10 +18,10 @@ import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.*;
  * Created by aisyahumar on 2/21/2018.
  */
 
-public class BookHelper {
+public class BookHelper implements DBHelper.EntityHelper{
     private static String DATABASE_TABLE = DatabaseContract.TABLE_BOOK;
     private Context context;
-    private DatabaseHelper dbHelper;
+    private DBHelper dbHelper;
 
     private SQLiteDatabase database;
 
@@ -28,14 +29,29 @@ public class BookHelper {
         this.context = context;
     }
 
-    public BookHelper open() throws SQLException {
-        dbHelper = new DatabaseHelper(context);
-        database = dbHelper.getWritableDatabase();
-        return this;
+    public void open() {
+        //dbHelper = new DBHelper(context);
+        //database = dbHelper.getWritableDatabase();
+        dbHelper = DBHelper.getInstance(context);
+        dbHelper.getWritableDatabase(new DBHelper.OnDBReadyListener() {
+            @Override
+            public BookHelper onDBReady(SQLiteDatabase db) {
+                database = db;
+                return BookHelper.this;
+            }
+        });
     }
 
     public void close(){
         dbHelper.close();
+    }
+
+    public SQLiteDatabase getDatabase(){
+        return database;
+    }
+
+    public void setDatabase(SQLiteDatabase db){
+        database = db;
     }
 
     public List<Book> query(){
@@ -113,11 +129,33 @@ public class BookHelper {
     }
 
     public Cursor queryProvider(){
-        return database.query(DATABASE_TABLE,null
-                ,null
-                ,null
-                ,null, null
-                ,_ID+" DESC");
+        Log.d(BookHelper.class.getSimpleName(), "queryProvider: database="+(database==null));
+        if(database!=null){
+
+            return database.query(DATABASE_TABLE,null
+                    ,null
+                    ,null
+                    ,null, null
+                    ,_ID+" DESC");
+        }else{
+            //Toast.makeText(context.getApplicationContext(), "Try again in a few seconds", Toast.LENGTH_LONG).show();
+            return null;
+        }
+    }
+
+    public Cursor queryByUploaded(String selection, String[] selectionArgs){
+
+        if(database!=null){
+            Log.d(BookHelper.class.getSimpleName(), "queryByUploaded: selection = '"+selection+"'");
+            return database.query(DATABASE_TABLE,null
+                    ,selection
+                    ,selectionArgs
+                    ,null, null
+                    ,_ID+" DESC");
+        }else{
+            //Toast.makeText(context.getApplicationContext(), "Try again in a few seconds", Toast.LENGTH_LONG).show();
+            return null;
+        }
     }
 
     public long insertProvider(ContentValues values){

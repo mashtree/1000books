@@ -9,6 +9,7 @@
     <string name="add_success">Adding item success</string>
     <string name="update_success">Edit item success</string>
     <string name="delete_success">Delete item success</string>
+    <string name="upload_success">Upload into server success</string>
     <string name="at_least_200">At least 200 characters</string>
     <string name="btn_ok">OK</string>
     <string name="delete">Delete</string>
@@ -29,6 +30,14 @@
     <string name="keyword">keyword</string>
     <string name="collapse">collapse</string>
     <string name="expand">expand</string>
+    <string name="filter_local">Display all books</string>
+    <string name="filter_uploaded">Display uploaded books</string>
+    <string name="menu_settings">Settings</string>
+    <string name="refresh">Refresh</string>
+    <string name="call">Make phone call</string>
+    <string name="password">your password</string>
+    <string name="your_password">your password</string>
+    <string name="reader">Reader</string>
     <string-array name="rating_array">
         <item>1</item>
         <item>2</item>

@@ -20,24 +20,34 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/backcover" />
-
-        <TextView
-            android:id="@+id/tv_rating"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/sep0"
+            app:layout_constraintTop_toBottomOf="@+id/img_cover"
+            android:layout_height="1dp"
             android:layout_marginStart="8dp"
-            android:background="#4D000000"
-            android:drawableLeft="@drawable/ic_star_white_24dp"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:padding="8dp"
-            tools:text="5"
-            android:textSize="20sp"
-            android:textAppearance="@style/TextAppearance.AppCompat.Small"
-            android:textColor="@android:color/white"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"/>
+        <RatingBar
+            android:id="@+id/ratingBar"
+            style="@style/Widget.AppCompat.RatingBar.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/img_cover" />
+            app:layout_constraintTop_toBottomOf="@+id/sep0" />
+
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/sep1"
+            app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"/>
 
         <TextView
             android:id="@+id/tv_title"
@@ -46,13 +56,21 @@
             android:layout_marginEnd="8dp"
             android:layout_marginStart="8dp"
             android:text="TextView"
-            android:textSize="32sp"
             android:textColor="@android:color/black"
+            android:textSize="32sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_rating"
+            app:layout_constraintTop_toBottomOf="@+id/sep1"
             tools:text="Title" />
-
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/sep2"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"/>
         <TextView
             android:id="@+id/tv_author"
             android:layout_width="wrap_content"
@@ -61,7 +79,7 @@
             android:layout_marginTop="8dp"
             android:text="author:"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/sep2"
             tools:text="author:" />
 
         <TextView
@@ -72,9 +90,17 @@
             android:layout_marginTop="8dp"
             android:text="publisher:"
             app:layout_constraintStart_toEndOf="@+id/tv_author"
-            app:layout_constraintTop_toBottomOf="@+id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/sep2"
             tools:text="publisher:" />
-
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/sep3"
+            app:layout_constraintTop_toBottomOf="@+id/tv_publisher"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"/>
         <TextView
             android:id="@+id/tv_review"
             android:layout_width="0dp"
@@ -88,8 +114,17 @@
             android:textSize="15sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_publisher"
+            app:layout_constraintTop_toBottomOf="@+id/sep3"
             tools:text="ini review" />
+        <View
+            android:layout_width="match_parent"
+            android:id="@+id/sep4"
+            app:layout_constraintTop_toBottomOf="@+id/tv_review"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginTop="8dp"
+            android:background="@android:color/darker_gray"/>
 
         <TextView
             android:id="@+id/tv_get_from"
@@ -101,7 +136,7 @@
             android:text="from:"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_review"
+            app:layout_constraintTop_toBottomOf="@+id/sep4"
             tools:text="get from:" />
 
         <Button
@@ -112,6 +147,7 @@
             android:layout_marginStart="8dp"
             android:text="@string/upload"
             android:textSize="12sp"
+            android:visibility="gone"
             style="@style/Widget.AppCompat.Button.Colored"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

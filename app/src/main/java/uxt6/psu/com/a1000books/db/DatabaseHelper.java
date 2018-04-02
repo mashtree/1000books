@@ -10,6 +10,10 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class  DatabaseHelper extends SQLiteOpenHelper {
 
+    interface OnDBReadyListener{
+        void onDBReady(SQLiteDatabase db);
+    }
+
     public static final String DATABASE_NAME = "dbbooks";
     private static final int DATABASE_VERSION = 1;
     private static final String SQL_CREATE_TABLE_BOOK = String.format(
@@ -63,5 +67,10 @@ public class  DatabaseHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS "+DatabaseContract.TABLE_BOOK);
         onCreate(db);
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion){
+        onUpgrade(db, oldVersion, newVersion);
     }
 }

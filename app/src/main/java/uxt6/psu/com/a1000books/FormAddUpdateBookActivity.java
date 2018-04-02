@@ -1,17 +1,14 @@
 package uxt6.psu.com.a1000books;
 
 import android.content.ContentValues;
-import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.provider.MediaStore;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -22,10 +19,8 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
-import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -99,7 +94,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
                 isEdit = true;
             }
         }
-
+        //setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         String actionBarTitle = null;
         String btTitle = null;
 
@@ -128,7 +123,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             actionBarTitle = getString(R.string.add);
             btTitle = getString(R.string.save);
         }
-
+        spRating.setVisibility(View.GONE);
         //btnCancel.setOnClickListener(this);
 
         getSupportActionBar().setTitle(actionBarTitle);
@@ -141,72 +136,76 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     public void onClick(View view){
         int id = view.getId();
         if(id==R.id.btn_ok) {
-            String title = edtTitle.getText().toString().trim();
-            String author = edtAuthor.getText().toString().trim();
-            String publisher = edtPublisher.getText().toString().trim();
-            String getFrom = edtGetFrom.getText().toString().trim();
-            String review = edtReview.getText().toString().trim();
-            int rating = Integer.parseInt(spRating.getSelectedItem().toString());
-            int rate = (int) ratingBar.getRating();
-            Log.d(FormAddUpdateBookActivity.class.getSimpleName(), "onClick: selected item = "+String.valueOf(rating));
-
-            boolean isEmpty = false;
-
-            if (title.isEmpty()) {
-                isEmpty = true;
-                edtTitle.setError(getString(R.string.empty_field));
-            }
-
-            if (author.isEmpty()) {
-                isEmpty = true;
-                edtAuthor.setError(getString(R.string.empty_field));
-            }
-
-            if (publisher.isEmpty()) {
-                isEmpty = true;
-                edtPublisher.setError(getString(R.string.empty_field));
-            }
-
-            if (review.isEmpty()) {
-                isEmpty = true;
-                edtReview.setError(getString(R.string.empty_field));
-            }
-
-            if (review.length() < 200) {
-                //isEmpty = true;
-                //edtReview.setError(getString(R.string.at_least_200));
-            }
-
-            if (!isEmpty) {
-                ContentValues values = new ContentValues();
-                values.put(TITLE, title);
-                values.put(SERVER_ID, 0);
-                values.put(AUTHOR, author);
-                values.put(PUBLISHER, publisher);
-                values.put(GET_FROM, getFrom);
-                values.put(REVIEW, review);
-                values.put(RATING, rate);
-                values.put(COVER, title+filename+"."+extension);
-                imgCover.buildDrawingCache();
-                Bitmap bitmap = imgCover.getDrawingCache();
-                new ImageSaver(this)
-                        .setFileName(title+filename+"."+extension)
-                        .setDirectoryName("bookCovers")
-                        .save(bitmap);
-                if (isEdit) {
-                    getContentResolver().update(getIntent().getData(), values, null, null);
-                    setResult(RESULT_UPDATE);
-                    finish();
-                } else {
-                    values.put(DATE, getCurrentDate());
-                    getContentResolver().insert(DatabaseContract.BOOK_CONTENT_URI, values);
-                    setResult(RESULT_ADD);
-                    finish();
-                }
-            }
+            onSaveBook();
         }else if(id==R.id.img_cover){
             Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI
             startActivityForResult(i, 100);
+        }
+    }
+
+    private void onSaveBook(){
+        String title = edtTitle.getText().toString().trim();
+        String author = edtAuthor.getText().toString().trim();
+        String publisher = edtPublisher.getText().toString().trim();
+        String getFrom = edtGetFrom.getText().toString().trim();
+        String review = edtReview.getText().toString().trim();
+        int rating = Integer.parseInt(spRating.getSelectedItem().toString());
+        int rate = (int) ratingBar.getRating();
+        Log.d(FormAddUpdateBookActivity.class.getSimpleName(), "onClick: selected item = "+String.valueOf(rating));
+
+        boolean isEmpty = false;
+
+        if (title.isEmpty()) {
+            isEmpty = true;
+            edtTitle.setError(getString(R.string.empty_field));
+        }
+
+        if (author.isEmpty()) {
+            isEmpty = true;
+            edtAuthor.setError(getString(R.string.empty_field));
+        }
+
+        if (publisher.isEmpty()) {
+            isEmpty = true;
+            edtPublisher.setError(getString(R.string.empty_field));
+        }
+
+        if (review.isEmpty()) {
+            isEmpty = true;
+            edtReview.setError(getString(R.string.empty_field));
+        }
+
+        if (review.length() < 200) {
+            isEmpty = true;
+            edtReview.setError(getString(R.string.at_least_200));
+        }
+
+        if (!isEmpty) {
+            ContentValues values = new ContentValues();
+            values.put(TITLE, title);
+            values.put(SERVER_ID, 0);
+            values.put(AUTHOR, author);
+            values.put(PUBLISHER, publisher);
+            values.put(GET_FROM, getFrom);
+            values.put(REVIEW, review);
+            values.put(RATING, rate);
+            values.put(COVER, title+filename+"."+extension);
+            imgCover.buildDrawingCache();
+            Bitmap bitmap = imgCover.getDrawingCache();
+            new ImageSaver(this)
+                    .setFileName(title+filename+"."+extension)
+                    .setDirectoryName("bookCovers")
+                    .save(bitmap);
+            if (isEdit) {
+                getContentResolver().update(getIntent().getData(), values, null, null);
+                setResult(RESULT_UPDATE);
+                finish();
+            } else {
+                values.put(DATE, getCurrentDate());
+                getContentResolver().insert(DatabaseContract.BOOK_CONTENT_URI, values);
+                setResult(RESULT_ADD);
+                finish();
+            }
         }
     }
 
@@ -242,7 +241,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     protected void onDestroy(){
         super.onDestroy();
         if(helper!=null){
-            helper.close();
+            //helper.close();
         }
     }
 
@@ -254,7 +253,9 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         if(isEdit){
-            getMenuInflater().inflate(R.menu.menu_forms,menu);
+            getMenuInflater().inflate(R.menu.activity_form_update,menu);
+        }else{
+            getMenuInflater().inflate(R.menu.activity_form_add,menu);
         }
         return super.onCreateOptionsMenu(menu);
     }
@@ -273,6 +274,9 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
                 isDelete = true;
                 showAlertDialog(ALERT_DIALOG_DELETE);
                 break;
+            case R.id.menu_save:
+                onSaveBook();
+                break;
             case R.id.home:
                 showAlertDialog(ALERT_DIALOG_CLOSE);
                 break;
@@ -283,7 +287,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
     final int ALERT_DIALOG_CLOSE = 10;
     final int ALERT_DIALOG_DELETE = 20;
 
-    // pressing android back button
+    // back button
     @Override
     public void onBackPressed(){
         if(isEdit){
@@ -306,8 +310,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             dialogTitle = getString(R.string.delete);
         }
 
-        // creating and displaying AlertDialog subclass
-        // creating an instance and passing this activity that implements BaseDialog.BaseDialogListener
+        // alert dialog
         BaseDialog.getInstance(this)
                 .setDialogTitle(dialogTitle)
                 .setDialogMessage(dialogMessage)

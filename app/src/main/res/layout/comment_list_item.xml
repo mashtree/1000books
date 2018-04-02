@@ -30,6 +30,7 @@
                 android:layout_width="wrap_content"
                 style="@style/TextContent.Title"
                 tools:text="Captain America"
+                android:textColor="@color/colorWetAsphalt"
                 android:paddingRight="@dimen/activity_horizontal_margin"
                 />
             <RatingBar

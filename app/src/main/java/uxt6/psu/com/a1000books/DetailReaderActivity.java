@@ -8,7 +8,9 @@ import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -53,12 +55,43 @@ public class DetailReaderActivity extends AppCompatActivity {
         setContentView(R.layout.activity_detail_reader);
         ButterKnife.bind(this);
         book = getIntent().getParcelableExtra(DetailBookCommentActivity.EXTRA_BOOK);
+        //setSupportActionBar((Toolbar)findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle(getString(R.string.reader));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         new LoadReaderAsync(this).execute();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.activity_detail_reader, menu);
+        return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case R.id.menu_edit:
+
+                break;
+            case R.id.menu_settings:
+
+                break;
+            case R.id.menu_call:
+                Intent callIntent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + tvPhone.getText().toString().trim()));
+                callIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+                    // TODO: Consider calling
+                    //    ActivityCompat#requestPermissions
+                    // here to request the missing permissions, and then overriding
+                    //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+                    //                                          int[] grantResults)
+                    // to handle the case where the user grants the permission. See the documentation
+                    // for ActivityCompat#requestPermissions for more details.
+                    this.startActivity(callIntent);
+                }else{
+                    this.startActivity(callIntent);
+                }
+                break;
             case android.R.id.home:
                 Intent intent = new Intent(DetailReaderActivity.this, DetailBookCommentActivity.class);
                 intent.putExtra(DetailBookCommentActivity.EXTRA_BOOK, book);

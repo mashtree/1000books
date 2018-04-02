@@ -1,14 +1,15 @@
 package uxt6.psu.com.a1000books;
 
-import android.content.ContentValues;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.animation.OvershootInterpolator;
 import android.widget.Button;
@@ -47,14 +48,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import de.hdodenhof.circleimageview.CircleImageView;
 import uxt6.psu.com.a1000books.adapter.CommentAdapter;
-import uxt6.psu.com.a1000books.db.DatabaseContract;
 import uxt6.psu.com.a1000books.entity.Book;
 import uxt6.psu.com.a1000books.entity.Comment;
 import uxt6.psu.com.a1000books.settings.UserPreferences;
 import uxt6.psu.com.a1000books.utility.EndPoints;
 import uxt6.psu.com.a1000books.utility.VolleyMultipartRequest;
-
-import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.SERVER_ID;
 
 public class DetailBookCommentActivity extends AppCompatActivity {
 
@@ -73,6 +71,7 @@ public class DetailBookCommentActivity extends AppCompatActivity {
     @BindView(R.id.expandableTextView) ExpandableTextView expandableTextView;
     @BindView(R.id.button_toggle) ImageButton buttonToggle;
     @BindView(R.id.btn_submit_comment) Button btnSubmitComment;
+    @BindView(R.id.btn_want_to_read) Button btnWantToRead;
     private CommentAdapter adapter;
 
     @Override
@@ -84,7 +83,7 @@ public class DetailBookCommentActivity extends AppCompatActivity {
         adapter = new CommentAdapter(lvComments.getContext());
         adapter.notifyDataSetChanged();
         lvComments.setAdapter(adapter);
-
+        btnWantToRead.setVisibility(View.GONE);
         new LoadCommentAsync().execute();
 
         // set animation duration via code, but preferable in your layout files by using the animation_duration attribute
@@ -109,9 +108,18 @@ public class DetailBookCommentActivity extends AppCompatActivity {
         btnSubmitComment.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                sendComment();
+                if(TextUtils.isEmpty(edtComment.getText().toString())){
+                    edtComment.setError(getString(R.string.empty_field));
+                    return;
+                }else{
+                    sendComment();
+                }
             }
         });
+
+        //setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        getSupportActionBar().setTitle(getString(R.string.detail));
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
     }
 
@@ -168,7 +176,13 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                         tvAuthor.setText("by "+bookJson.getString("author"));
                         tvRate.setText(" "+bookJson.getString("rating"));
                         //tvReview.setText(bookJson.getString("review"));
-                        expandableTextView.setText(bookJson.getString("review").substring(0, 400)+"...");
+                        if(bookJson.getString("review").length()>=400){
+                            expandableTextView.setText(bookJson.getString("review").substring(0, 400)+"...");
+                        }else{
+                            expandableTextView.setText(bookJson.getString("review"));
+                            //buttonToggle.setVisibility(View.GONE);
+                        }
+                        Log.d(DetailBookCommentActivity.class.getSimpleName(), "onPostExecute: covers "+bookJson.getString("cover"));
                         Picasso.with(DetailBookCommentActivity.this)
                                 .load(bookJson.getString("reader_photo"))
                                 .placeholder(R.drawable.ic_photo_black_24dp)
@@ -188,7 +202,7 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                             public void onClick(final View v)
                             {
                                 expandableTextView.toggle();
-                                buttonToggle.setImageResource(expandableTextView.isExpanded() ? R.drawable.ic_keyboard_arrow_up_black_24dp : R.drawable.ic_keyboard_arrow_down_black_24dp);
+                                buttonToggle.setImageResource(expandableTextView.isExpanded() ? R.drawable.ic_keyboard_arrow_up_black : R.drawable.ic_keyboard_arrow_down_black);
                             }
                         });
 
@@ -201,12 +215,12 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                                 if (expandableTextView.isExpanded())
                                 {
                                     expandableTextView.collapse();
-                                    buttonToggle.setImageResource(R.drawable.ic_keyboard_arrow_down_black_24dp);
+                                    buttonToggle.setImageResource(R.drawable.ic_keyboard_arrow_down_black);
                                 }
                                 else
                                 {
                                     expandableTextView.expand();
-                                    buttonToggle.setImageResource(R.drawable.ic_keyboard_arrow_up_black_24dp);
+                                    buttonToggle.setImageResource(R.drawable.ic_keyboard_arrow_up_black);
                                 }
                             }
                         });
@@ -230,7 +244,11 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                             public void onCollapse(final ExpandableTextView view)
                             {
                                 try {
-                                    view.setText(books.getString("review").substring(0, 400)+"...");
+                                    if(books.getString("review").length()>399) {
+                                        view.setText(books.getString("review").substring(0, 400) + "...");
+                                    }else{
+                                        view.setText(books.getString("review"));
+                                    }
                                 } catch (JSONException e) {
                                     e.printStackTrace();
                                 }
@@ -328,8 +346,10 @@ public class DetailBookCommentActivity extends AppCompatActivity {
             protected Map<String, String> getParams() throws AuthFailureError {
                 int bookId = book.getServerId();
                 int readerid = new UserPreferences(DetailBookCommentActivity.this).getReaderServerId();
+                Log.d(DetailBookCommentActivity.class.getSimpleName(), "getParams: readerid="+readerid);
                 String comment = edtComment.getText().toString().trim();
                 int rating = (int) ratingBar.getRating();
+                if(rating<1) rating =1;
                 Map<String, String> params = new HashMap<>();
                 params.put("book_id", String.valueOf(bookId));
                 params.put("reader_id", String.valueOf(readerid));
@@ -352,5 +372,19 @@ public class DetailBookCommentActivity extends AppCompatActivity {
 
         //adding the request to volley
         Volley.newRequestQueue(this).add(volleyMultipartRequest);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.activity_detail_book_comment, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item){
+        if(item.getItemId()==R.id.menu_search){
+
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

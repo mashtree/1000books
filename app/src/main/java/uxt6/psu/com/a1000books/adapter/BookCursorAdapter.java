@@ -7,10 +7,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,7 +55,7 @@ public class BookCursorAdapter extends RecyclerView.Adapter<BookCursorAdapter.Bo
     public void onBindViewHolder(final BookViewHolder holder, int position) {
         final Book book = getItem(position);
         holder.tvTitle.setText(book.getTitle());
-        holder.tvAuthor.setText(book.getAuthor());
+        holder.tvAuthor.setText("by "+book.getAuthor());
         holder.tvRate.setText(String.valueOf(book.getRating()));
         holder.tvPublication.setText(book.getPublisher());
         Bitmap bitmap = new ImageSaver(activity)
@@ -70,23 +72,29 @@ public class BookCursorAdapter extends RecyclerView.Adapter<BookCursorAdapter.Bo
                 activity.startActivityForResult(intent, FormAddUpdateBookActivity.REQUEST_UPDATE);
             }
         });
-        holder.btnUpload.setOnClickListener(new View.OnClickListener() {
+        if(book.getServerId()==0){
+            Log.d(BookCursorAdapter.class.getSimpleName(), "onBindViewHolder: "+(book.getServerId()==0));
+            holder.btnUpload.setVisibility(View.GONE);
+        }else{
+            Log.d(BookCursorAdapter.class.getSimpleName(), "onBindViewHolder: "+(book.getServerId()==0));
+            holder.btnUpload.setVisibility(View.VISIBLE);
+        }
+        /*holder.btnUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Toast.makeText(activity, "Nothing to do with "+book.getTitle(), Toast.LENGTH_SHORT).show();
             }
-        });
+        });*/
         holder.cvNote.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(activity, BookDetailActivity.class);
-                intent.putExtra(BookDetailActivity.EXTRA_BOOK, book);
+                intent.putExtra(BookDetailActivity.EXTRA_BOOK, book.getId());
+                Log.d(BookCursorAdapter.class.getSimpleName(), "onClick: _id="+book.getId());
+                //activity.startActivityForResult(intent, BookDetailActivity.REQUEST_UPLOAD);
                 activity.startActivity(intent);
             }
         });
-        if(book.getServerId()>0){
-            holder.btnUpload.setVisibility(View.GONE);
-        }
     }
 
     @Override
@@ -105,7 +113,7 @@ public class BookCursorAdapter extends RecyclerView.Adapter<BookCursorAdapter.Bo
     public class BookViewHolder extends RecyclerView.ViewHolder{
         TextView tvTitle, tvAuthor, tvRate, tvPublication;
         ImageView ivCover;
-        Button btnEdit, btnUpload;
+        ImageButton btnEdit, btnUpload;
         CardView cvNote;
 
         public BookViewHolder(View v) {
@@ -115,8 +123,8 @@ public class BookCursorAdapter extends RecyclerView.Adapter<BookCursorAdapter.Bo
             tvRate = (TextView) v.findViewById(R.id.tv_rate);
             tvPublication = (TextView) v.findViewById(R.id.tv_publisher);
             ivCover = (ImageView) v.findViewById(R.id.iv_cover);
-            btnEdit = (Button) v.findViewById(R.id.btn_edit);
-            btnUpload = (Button) v.findViewById(R.id.btn_upload);
+            btnEdit = (ImageButton) v.findViewById(R.id.btn_edit);
+            btnUpload = (ImageButton) v.findViewById(R.id.btn_upload);
             cvNote = (CardView) itemView.findViewById(R.id.cv_item_note);
         }
     }

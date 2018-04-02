@@ -33,12 +33,14 @@ public class BookAsyncTaskLoader extends AsyncTaskLoader<List<Book>> {
     //private static final Map<String, String> url = new HashMap<>();
     private String url;
     private final String urls = EndPoints.SEARCH_BOOK_URL;
+    private String selection;
 
-    public BookAsyncTaskLoader(Context context, String keyword) {
+    public BookAsyncTaskLoader(Context context, String keyword, String selection) {
         super(context);
         onContentChanged();
 
         action = SearchBookActivity.EXTRAS_KEYWORD;
+        this.selection=selection;
 
         this.keyword = keyword;
     }
@@ -79,6 +81,10 @@ public class BookAsyncTaskLoader extends AsyncTaskLoader<List<Book>> {
 
         final List<Book> books = new ArrayList<>();
         String url = EndPoints.SEARCH_BOOK_URL + keyword;
+        if(selection!=null){
+            url = url+"&filter="+selection;
+        }
+        System.out.println(url);
         client.get(url, new AsyncHttpResponseHandler() {
             @Override
             public void onStart() {

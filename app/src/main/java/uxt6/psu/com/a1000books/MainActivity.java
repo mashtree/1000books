@@ -27,6 +27,7 @@ import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -44,6 +45,7 @@ import uxt6.psu.com.a1000books.utility.VolleyMultipartRequest;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener{
 
     @BindView(R.id.tv_name) EditText tvName;
+    @BindView(R.id.tv_password) EditText tvPassword;
     @BindView(R.id.tv_city) EditText tvCity;
     @BindView(R.id.tv_phone) EditText tvPhone;
     @BindView(R.id.btnSubmit) Button btnSubmit;
@@ -59,11 +61,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         prefs = new UserPreferences(this);
 
-        if(isExistYourPreference()){
-            goToYourBook();
-        }
+        //if(isExistYourPreference()){
+        //    goToYourBook();
+        //}
         btnSubmit.setOnClickListener(this);
         imageView.setOnClickListener(this);
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        //if(isExistYourPreference()){
+        //    goToYourBook();
+        //}
     }
 
     @Override
@@ -72,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(id==R.id.btnSubmit){
             String name = tvName.getText().toString().trim();
+            String password = tvPassword.getText().toString().trim();
             String addr = tvCity.getText().toString().trim();
             String phone = tvPhone.getText().toString().trim();
 
@@ -80,6 +91,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(TextUtils.isEmpty(name)){
                 error = true;
                 tvName.setError(getString(R.string.empty_field));
+            }
+
+            if(TextUtils.isEmpty(password)){
+                error = true;
+                tvPassword.setError(getString(R.string.empty_field));
             }
 
             if(TextUtils.isEmpty(addr)){
@@ -95,13 +111,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(!error){
                 prefs.setReaderName(name)
                         .setAddress(addr)
+                        .setPassword(password)
                         .setPhoneNumber(phone)
                         .doCommit();
+                Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
+                uploadBitmap(bitmap);
                 goToYourBook();
             }
-
-            Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
-            uploadBitmap(bitmap);
 
         }else if(id==R.id.imageView){
             Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI
@@ -170,13 +186,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void uploadBitmap(final Bitmap bitmap) {
-
+        Log.d(MainActivity.class.getSimpleName(), "uploadBitmap: "+EndPoints.POST_READER_URL);
         //our custom volley request
         VolleyMultipartRequest volleyMultipartRequest = new VolleyMultipartRequest(Request.Method.POST, EndPoints.POST_READER_URL,
                 new Response.Listener<NetworkResponse>() {
                     @Override
                     public void onResponse(NetworkResponse response) {
                         try {
+                            Log.d(MainActivity.class.getSimpleName(), "onResponse: "+new String(response.data).toString());
                             JSONObject obj = new JSONObject(new String(response.data));
                             Log.d(MainActivity.class.getSimpleName(), "onResponse: "+obj.toString());
                             prefs.setToken(obj.getString("reg_number"))
@@ -207,6 +224,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("name", tvName.getText().toString().trim());
+                params.put("password", tvPassword.getText().toString().trim());
                 params.put("location", tvCity.getText().toString().trim());
                 params.put("phone", tvPhone.getText().toString().trim());
                 return params;
@@ -234,16 +252,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void goToYourBook(){
         Intent intent = new Intent(this, BookActivity.class);
         startActivity(intent);
-    }
-
-    /**
-     * checking the preferences
-     * @return
-     */
-    private boolean isExistYourPreference(){
-        //String name = pref.getString(getString(R.string.your_name), "");
-        String name = prefs.getReaderName();
-        if(name.length()>0) return true;
-        return false;
     }
 }

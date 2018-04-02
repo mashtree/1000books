@@ -5,17 +5,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/colorAntiFlashWhite"
     tools:context="uxt6.psu.com.a1000books.BookActivity">
-    <!--<android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorAmour"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        android:layout_alignParentTop="true"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>-->
+
     <ProgressBar
         android:layout_width="48dp"
         android:layout_height="48dp"
@@ -25,7 +16,6 @@
         android:id="@+id/rv_your_book"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/toolbar"
         tools:listitem="@layout/item_list_books"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
     <android.support.design.widget.FloatingActionButton
