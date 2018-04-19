@@ -32,6 +32,11 @@ public class UserPreferences {
         return this;
     }
 
+    public UserPreferences setEmail(String email){
+        editor.putString(context.getString(R.string.your_email),email);
+        return this;
+    }
+
     public UserPreferences setPassword(String password){
         editor.putString(context.getString(R.string.your_password),password);
         return this;
@@ -67,6 +72,10 @@ public class UserPreferences {
 
     public String getReaderName(){
         return prefs.getString(context.getString(R.string.your_name),"");
+    }
+
+    public String getEmail(){
+        return prefs.getString(context.getString(R.string.your_email),"");
     }
 
     public String getPassword(){

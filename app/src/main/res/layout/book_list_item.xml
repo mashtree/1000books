@@ -25,6 +25,7 @@
         <TextView
             android:id="@+id/tv_title"
             style="@style/TextContent.Title"
+            android:textColor="@color/colorWetAsphalt"
             tools:text="Captain America"
             />
         <TextView

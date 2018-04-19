@@ -38,6 +38,16 @@
     <string name="password">your password</string>
     <string name="your_password">your password</string>
     <string name="reader">Reader</string>
+    <string name="pref_display_uploaded">Show uploaded books only</string>
+    <string name="pref_location">Your location</string>
+    <string name="pref_phone">Your phone number</string>
+    <string name="pref_cat_profile">profile</string>
+    <string name="signin">Sign in</string>
+    <string name="your_email">Your email</string>
+    <string name="register">register</string>
+    <string name="email_constraint">must be email address</string>
+    <string name="gplus">share on google plus</string>
+    <string name="show_uploaded_summary">only display the books that have been shared to the server</string>
     <string-array name="rating_array">
         <item>1</item>
         <item>2</item>

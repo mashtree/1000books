@@ -16,6 +16,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -24,10 +25,13 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -47,11 +51,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.tv_name) EditText tvName;
     @BindView(R.id.tv_password) EditText tvPassword;
     @BindView(R.id.tv_city) EditText tvCity;
+    @BindView(R.id.tv_email) EditText tvEmail;
     @BindView(R.id.tv_phone) EditText tvPhone;
     @BindView(R.id.btnSubmit) Button btnSubmit;
     @BindView(R.id.imageView) CircleImageView imageView;
+    @BindView(R.id.tv_signin) TextView tvSignin;
 
     UserPreferences prefs;
+    public static int PLACE_PICKER_REQUEST = 101;
+    public static int IMAGE_PICKER_REQUEST = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +74,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //}
         btnSubmit.setOnClickListener(this);
         imageView.setOnClickListener(this);
+        tvCity.setOnClickListener(this);
+        tvSignin.setOnClickListener(this);
     }
 
     @Override
@@ -83,6 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(id==R.id.btnSubmit){
             String name = tvName.getText().toString().trim();
             String password = tvPassword.getText().toString().trim();
+            String email = tvEmail.getText().toString().trim();
             String addr = tvCity.getText().toString().trim();
             String phone = tvPhone.getText().toString().trim();
 
@@ -96,6 +107,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if(TextUtils.isEmpty(password)){
                 error = true;
                 tvPassword.setError(getString(R.string.empty_field));
+            }
+
+            if(TextUtils.isEmpty(email)){
+                error = true;
+                tvPassword.setError(getString(R.string.empty_field));
+            }
+
+            boolean isEmail = android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches();
+
+            if(!isEmail){
+                error = true;
+                tvEmail.setError(getString(R.string.email_constraint));
             }
 
             if(TextUtils.isEmpty(addr)){
@@ -116,23 +139,36 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         .doCommit();
                 Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
                 uploadBitmap(bitmap);
-                goToYourBook();
+                //goToYourBook();
             }
 
         }else if(id==R.id.imageView){
             Intent i = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI); //EXTERNAL_CONTENT_URI
-            startActivityForResult(i, 100);
+            startActivityForResult(i, IMAGE_PICKER_REQUEST);
+        }else if(id==R.id.tv_signin){
+            Intent iLogin = new Intent(MainActivity.this, LoginActivity.class);
+            startActivity(iLogin);
+        }else if(id==R.id.tv_city){
+            /*Uri gmmIntentUri = Uri.parse("geo:0.0,0.0");
+            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+            mapIntent.setPackage("com.google.android.apps.maps");
+            startActivityForResult(mapIntent, 101);*/
+
+            PlacePicker.IntentBuilder builder;
+            builder = new PlacePicker.IntentBuilder();
+
+            try {
+                startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+            } catch (GooglePlayServicesRepairableException e) {
+                e.printStackTrace();
+            } catch (GooglePlayServicesNotAvailableException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     /*
-    * The method is taking Bitmap as an argument
-    * then it will return the byte[] array for the given bitmap
-    * and we will send this array to the server
-    * here we are using PNG Compression with 80% quality
-    * you can give quality between 0 to 100
-    * 0 means worse quality
-    * 100 means best quality
+    *
     * */
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
@@ -146,7 +182,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == 100 && resultCode == RESULT_OK && data != null) {
+        if (requestCode == IMAGE_PICKER_REQUEST && resultCode == RESULT_OK && data != null) {
 
             //getting the image Uri
             Uri imageUri = data.getData();
@@ -165,8 +201,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }else if (requestCode == PLACE_PICKER_REQUEST) {
+            if (resultCode == RESULT_OK) {
+                Place place = PlacePicker.getPlace(data, this);
+                String toastMsg = String.format("Place: %s %s", place.getName(), place.getLatLng().toString());
+                latLong = place.getLatLng().toString();
+                tvCity.setText(place.getAddress());
+                Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
+            }
         }
     }
+
+    private String latLong;
 
     public static String getMimeType(Context context, Uri uri) {
         String extension;
@@ -202,6 +248,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     .doCommit();
                             //Toast.makeText(getApplicationContext(), prefs.getToken()+"-"+prefs.getPicture(), Toast.LENGTH_SHORT).show();
                             Log.d(MainActivity.class.getSimpleName(), "uploadBitmap: "+prefs.getReaderServerId()+"-"+prefs.getToken()+"-"+prefs.getPicture());
+                            goToYourBook(MainActivity.this);
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
@@ -215,17 +262,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }) {
 
             /*
-            * If you want to add more parameters with the image
-            * you can do it here
-            * here we have only one parameter with the image
-            * which is tags
             * */
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
                 Map<String, String> params = new HashMap<>();
                 params.put("name", tvName.getText().toString().trim());
                 params.put("password", tvPassword.getText().toString().trim());
-                params.put("location", tvCity.getText().toString().trim());
+                params.put("email", tvEmail.getText().toString().trim());
+                //params.put("location", tvCity.getText().toString().trim());
+                params.put("location", latLong);
                 params.put("phone", tvPhone.getText().toString().trim());
                 return params;
             }
@@ -249,8 +294,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     /**
      * go to your book activity
      */
-    private void goToYourBook(){
-        Intent intent = new Intent(this, BookActivity.class);
-        startActivity(intent);
+    public static void goToYourBook(Context context){
+        Intent intent = new Intent(context, BookActivity.class);
+        context.startActivity(intent);
     }
 }

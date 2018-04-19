@@ -29,7 +29,9 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.plus.PlusShare;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +47,7 @@ import uxt6.psu.com.a1000books.db.BookHelper;
 import uxt6.psu.com.a1000books.db.DBHelper;
 import uxt6.psu.com.a1000books.db.DatabaseContract;
 import uxt6.psu.com.a1000books.entity.Book;
+import uxt6.psu.com.a1000books.entity.Comment;
 import uxt6.psu.com.a1000books.settings.UserPreferences;
 import uxt6.psu.com.a1000books.utility.EndPoints;
 import uxt6.psu.com.a1000books.utility.ImageSaver;
@@ -71,6 +74,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
 
     public static final int REQUEST_UPLOAD = 400;
     public static final int RESULT_UPLOAD = 401;
+    public static final int REQUEST_PLUS = 500;
     private int id;
 
     public static final String EXTRA_BOOK = "uxt6.psu.com.a1000books.EXTRA_BOOK";
@@ -274,7 +278,63 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
             }
         }else if(item.getItemId()==R.id.menu_settings){
 
+        }else if(item.getItemId()==R.id.menu_gplus){
+            if(book.getServerId()>0){
+                StringBuilder sb = new StringBuilder();
+                sb.append(book.getTitle());
+                sb.append("\n");
+                sb.append("by "+book.getAuthor()+"\n");
+                sb.append(book.getReview());
+                gplusUpload(sb.toString());
+            }else{
+                Toast.makeText(BookDetailActivity.this, "the book need to be uploaded", Toast.LENGTH_LONG).show();
+            }
+
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @SuppressLint("StaticFieldLeak")
+    private void gplusUpload(String params){
+        final String text = params;
+        new AsyncTask<Void, Void, String>(){
+            private final String url = EndPoints.GET_BOOK_URL+book.getServerId();
+            @Override
+            protected String doInBackground(Void... params){
+                String jsonString = null;
+                try {
+
+                    if (jsonString == null || jsonString == "") {
+                        jsonString = DetailBookCommentActivity.getJsonFromServer(url);
+                    }
+                } catch (IOException e) {
+
+                    e.printStackTrace();
+                }
+                return jsonString;
+            }
+
+            @Override
+            public void onPostExecute(String jsonString){
+                JSONObject response = null;
+                JSONObject bookJson = null;
+                JSONArray commentsJson = null;
+                try {
+                    response = new JSONObject(jsonString);
+                    bookJson = response.getJSONObject("books");
+
+                    Intent shareIntent = new PlusShare.Builder(BookDetailActivity.this)
+                            .setType("text/plain")
+                            .setText(text)
+                            .setContentUrl(Uri.parse(bookJson.getString("cover")))
+                            .getIntent();
+
+                    startActivityForResult(shareIntent, REQUEST_PLUS);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }.execute();
     }
 }

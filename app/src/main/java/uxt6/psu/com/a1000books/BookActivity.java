@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
@@ -39,13 +40,25 @@ implements View.OnClickListener{
     private BookCursorAdapter adapter;
     private boolean filtered = false;
     private BookHelper helper;
-    UserPreferences prefs;
+    private UserPreferences prefs;
+    private int startList = 0;
+    private int perPage = 5;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_book);
         ButterKnife.bind(this);
+
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        filtered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_display_uploaded),false);
+
+        if (savedInstanceState != null) {
+            filtered = savedInstanceState.getBoolean("filtered");
+            startList = savedInstanceState.getInt("start_list");
+            perPage = savedInstanceState.getInt("list_per_page");
+        }
+
         helper = new BookHelper(BookActivity.this);
         helper.open();
         rvYourBook.setLayoutManager(new LinearLayoutManager(this));
@@ -62,14 +75,15 @@ implements View.OnClickListener{
         fabAddBook.setVisibility(View.GONE);
 
         prefs = new UserPreferences(this);
-        if(!isExistYourPreference()){
-            goToRegistrationPage();
-        }
+
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+        if(!isExistYourPreference()){
+            goToRegistrationPage();
+        }
         if(helper.getDatabase()==null){
             DBHelper.getInstance(this).getWritableDatabase(new DBHelper.OnDBReadyListener() {
                 @Override
@@ -133,7 +147,7 @@ implements View.OnClickListener{
         }.execute(filtered);
     }
 
-    private class LoadNoteAsync extends AsyncTask<Void,Void,Cursor> {
+    /*private class LoadNoteAsync extends AsyncTask<Void,Void,Cursor> {
         @Override
         protected void onPreExecute(){
             super.onPreExecute();
@@ -159,7 +173,7 @@ implements View.OnClickListener{
                 showSnackbarMessage("No data");
             }
         }
-    }
+    }*/
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
@@ -238,6 +252,8 @@ implements View.OnClickListener{
                 onAsyncLoadBooks(filtered);
                 break;
             case R.id.menu_settings:
+                Intent intentSetting = new Intent(BookActivity.this, SettingActivity.class);
+                startActivity(intentSetting);
                 break;
             default:
                 return super.onOptionsItemSelected(item);
@@ -248,6 +264,14 @@ implements View.OnClickListener{
     @Override
     public void onBackPressed(){
         finish();
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putBoolean("filtered", filtered);
+        outState.putInt("start_list", startList);
+        outState.putInt("list_per_page", perPage);
     }
 
     /**

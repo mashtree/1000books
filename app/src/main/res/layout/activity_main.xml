@@ -7,6 +7,7 @@
     tools:context="uxt6.psu.com.a1000books.MainActivity">
 
     <LinearLayout
+        android:id="@+id/linearLayout"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
@@ -35,6 +36,14 @@
             android:inputType="textPersonName|textCapWords" />
 
         <EditText
+            android:id="@+id/tv_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/your_email"
+            android:inputType="textEmailAddress"/>
+
+        <EditText
             android:id="@+id/tv_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -48,7 +57,8 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="@string/your_city"
-            android:inputType="text" />
+            android:inputType="none"
+            />
 
         <EditText
             android:id="@+id/tv_phone"
@@ -62,6 +72,18 @@
             android:id="@+id/btnSubmit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="register" />
+            android:text="@string/register" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tv_signin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/signin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 </android.support.constraint.ConstraintLayout>

@@ -337,10 +337,7 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                 }) {
 
             /*
-            * If you want to add more parameters with the image
-            * you can do it here
-            * here we have only one parameter with the image
-            * which is tags
+            *
             * */
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {

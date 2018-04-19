@@ -17,12 +17,21 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
+
+import butterknife.BindView;
+import de.hdodenhof.circleimageview.CircleImageView;
+import uxt6.psu.com.a1000books.settings.UserPreferences;
+import uxt6.psu.com.a1000books.utility.EndPoints;
 
 /**
  * credits for this code and app_base_layout.xml to:
@@ -35,6 +44,8 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
     private DrawerLayout mDrawerLayout;
     private ActionBarDrawerToggle mDrawerToggle;
     private Menu drawerMenu;
+    private CircleImageView yourImage;
+    private TextView yourName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +63,21 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
             drawerMenu.getItem(i).setOnMenuItemClickListener(this);
         }
         // and so on...
+        UserPreferences prefs = new UserPreferences(this);
+        prefs.setPicture(EndPoints.ROOT_URL+"readers/b00307d6596b6aa31ca8a6fc238753371814567953.jpg");
+        prefs.doCommit();
+        Log.d(AppBaseActivity.class.getSimpleName(), "onCreate: "+prefs.getPicture());
+        View view = navigation_view.getHeaderView(0);
+        yourImage = (CircleImageView) view.findViewById(R.id.your_image);
+        yourName = (TextView) view.findViewById(R.id.your_name);
+        if(prefs.getPicture()!=null){
+            Picasso.with(this)
+                    .load(prefs.getPicture())
+                    .placeholder(R.drawable.ic_photo_black_24dp)
+                    .error(R.drawable.ic_filter_b_and_w_black_24dp)
+                    .into(yourImage);
+            yourName.setText(prefs.getReaderName());
+        }
     }
 
     @Override

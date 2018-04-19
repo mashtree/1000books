@@ -3,6 +3,8 @@ package uxt6.psu.com.a1000books;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.support.v4.app.ActivityCompat;
@@ -15,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
@@ -28,6 +32,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import at.blogc.android.views.ExpandableTextView;
 import butterknife.BindView;
@@ -70,9 +75,6 @@ public class DetailReaderActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.menu_edit:
-
-                break;
             case R.id.menu_settings:
 
                 break;
@@ -144,8 +146,10 @@ public class DetailReaderActivity extends AppCompatActivity {
                 try {
                     response = new JSONObject(jsonString);
                     readerJson = response.getJSONObject("readers");
+
                     tvName.setText(readerJson.getString("name"));
-                    tvLocation.setText(readerJson.getString("location"));
+                    tvLocation.setText(getLocationDetail(readerJson.getString("location")).get(0).getAddressLine(0));
+                    //tvLocation.setText(readerJson.getString("location"));
                     tvPhone.setText(readerJson.getString("phone"));
                     Picasso.with(DetailReaderActivity.this)
                             .load(readerJson.getString("photo"))
@@ -173,12 +177,48 @@ public class DetailReaderActivity extends AppCompatActivity {
 
                         }
                     });
-
+                    final double lat = latitude;
+                    final double longit = longitude;
+                    tvLocation.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Uri gmmIntentUri = Uri.parse("geo:"+lat+","+longit);
+                            Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
+                            mapIntent.setPackage("com.google.android.apps.maps");
+                            startActivity(mapIntent);
+                        }
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
+    }
+    private Double latitude;
+    private Double longitude;
+    private List<Address> getLocationDetail(String langLong){
+        String[] str = langLong.split(":");
+        String[] loc = str[1].replace("(","").replace(")","").trim().split(",");
+        latitude = Double.parseDouble(loc[0].trim());
+        longitude = Double.parseDouble(loc[1].trim());
+        Geocoder geocoder;
+        List<Address> addresses = new ArrayList<>();
+        geocoder = new Geocoder(this, Locale.getDefault());
+
+        try {
+            addresses = geocoder.getFromLocation(latitude, longitude, 1); // Here 1 represent max location result to returned, by documents it recommended 1 to 5
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        /*String address = addresses.get(0).getAddressLine(0); // If any additional address line present than only, check with max available address lines by getMaxAddressLineIndex()
+        String city = addresses.get(0).getLocality();
+        String state = addresses.get(0).getAdminArea();
+        String country = addresses.get(0).getCountryName();
+        String postalCode = addresses.get(0).getPostalCode();
+        String knownName = addresses.get(0).getFeatureName(); // Only if available else return NULL*/
+
+        return addresses;
     }
 
     public static String getJsonFromServer(String url) throws IOException {

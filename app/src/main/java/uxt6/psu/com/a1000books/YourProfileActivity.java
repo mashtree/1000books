@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.w3c.dom.Text;
 
@@ -31,8 +32,20 @@ public class YourProfileActivity extends AppBaseActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(YourProfileActivity.this, UpdateProfileActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, UpdateProfileActivity.REQUEST_UPDATE);
             }
         });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode,resultCode,data);
+
+        if(requestCode==UpdateProfileActivity.REQUEST_UPDATE){
+            if(resultCode==UpdateProfileActivity.RESULT_UPDATE){
+                //new LoadNoteAsync().execute();
+                Toast.makeText(YourProfileActivity.this, getString(R.string.add_success), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
