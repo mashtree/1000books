@@ -16,6 +16,7 @@ import android.view.View;
 import android.webkit.MimeTypeMap;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @BindView(R.id.btnSubmit) Button btnSubmit;
     @BindView(R.id.imageView) CircleImageView imageView;
     @BindView(R.id.tv_signin) TextView tvSignin;
+    @BindView(R.id.ib_location) ImageButton ibLocation;
+    @BindView(R.id.tv_location) TextView tvLocation;
 
     UserPreferences prefs;
     public static int PLACE_PICKER_REQUEST = 101;
@@ -74,7 +77,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //}
         btnSubmit.setOnClickListener(this);
         imageView.setOnClickListener(this);
-        tvCity.setOnClickListener(this);
+        //tvCity.setOnClickListener(this);
+        ibLocation.setOnClickListener(this);
         tvSignin.setOnClickListener(this);
     }
 
@@ -94,7 +98,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             String name = tvName.getText().toString().trim();
             String password = tvPassword.getText().toString().trim();
             String email = tvEmail.getText().toString().trim();
-            String addr = tvCity.getText().toString().trim();
+            String addr = tvLocation.getText().toString().trim();
             String phone = tvPhone.getText().toString().trim();
 
             boolean error = false;
@@ -130,13 +134,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 error = true;
                 tvPhone.setError(getString(R.string.empty_field));
             }
-
+            Log.d(MainActivity.class.getSimpleName(), "onClick: btnSubmit "+error);
             if(!error){
                 prefs.setReaderName(name)
                         .setAddress(addr)
                         .setPassword(password)
                         .setPhoneNumber(phone)
                         .doCommit();
+
                 Bitmap bitmap = ((BitmapDrawable)imageView.getDrawable()).getBitmap();
                 uploadBitmap(bitmap);
                 //goToYourBook();
@@ -148,7 +153,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }else if(id==R.id.tv_signin){
             Intent iLogin = new Intent(MainActivity.this, LoginActivity.class);
             startActivity(iLogin);
-        }else if(id==R.id.tv_city){
+        //}else if(id==R.id.tv_city){
+        }else if(id==R.id.ib_location){
             /*Uri gmmIntentUri = Uri.parse("geo:0.0,0.0");
             Intent mapIntent = new Intent(Intent.ACTION_VIEW, gmmIntentUri);
             mapIntent.setPackage("com.google.android.apps.maps");
@@ -172,12 +178,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     * */
     public byte[] getFileDataFromDrawable(Bitmap bitmap) {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 80, byteArrayOutputStream);
+        bitmap.compress(Bitmap.CompressFormat.PNG, 50, byteArrayOutputStream);
         return byteArrayOutputStream.toByteArray();
     }
 
     private String extension = "png";
     private String filename;
+    private final int MAX_HEIGHT = 400;
+    private final int MAX_WIDTH = 300;
+    private final String TAG = MainActivity.class.getSimpleName();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -190,11 +199,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             try {
                 //getting bitmap object from uri
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                //resize bitmap here
+                int imgHeight = bitmap.getHeight();
+                int imgWidth = bitmap.getWidth();
+                Log.d(TAG, "onActivityResult: image height="+imgHeight+" image size="+bitmap.getByteCount());
+                Bitmap newBitmap = bitmap;
+                if(imgHeight>MAX_HEIGHT || imgWidth>MAX_WIDTH){
+
+                    newBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()*MAX_HEIGHT/imgHeight, MAX_HEIGHT, false);
+                    Log.d(TAG, "onActivityResult: img size "+newBitmap.getByteCount());
+                }
                 //displaying selected image to imageview
-                imageView.setImageBitmap(bitmap);
+                imageView.setImageBitmap(newBitmap);
                 extension = getMimeType(this, imageUri);
                 File file= new File(imageUri.getPath());
                 filename = file.getName();
+
                 //Log.d(MainActivity.class.getSimpleName(), "onActivityResult: file extension = "+filename);
                 //calling the method uploadBitmap to upload image
                 //uploadBitmap(bitmap);
@@ -206,7 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Place place = PlacePicker.getPlace(data, this);
                 String toastMsg = String.format("Place: %s %s", place.getName(), place.getLatLng().toString());
                 latLong = place.getLatLng().toString();
-                tvCity.setText(place.getAddress());
+                tvLocation.setText(place.getAddress());
                 Toast.makeText(this, toastMsg, Toast.LENGTH_LONG).show();
             }
         }

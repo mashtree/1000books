@@ -7,19 +7,10 @@
         android:title="@string/pref_display_uploaded"
         android:summary="@string/show_uploaded_summary"/>
 
-    <PreferenceCategory
-        android:title="@string/pref_cat_profile">
-    <EditTextPreference
-        android:defaultValue="Default value"
-        android:key="@string/pref_location"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/pref_location" />
-    <EditTextPreference
-        android:defaultValue="Default value"
-        android:key="@string/pref_phone"
-        android:selectAllOnFocus="true"
-        android:singleLine="true"
-        android:title="@string/pref_phone" />
-    </PreferenceCategory>
+    <CheckBoxPreference
+        android:defaultValue="false"
+        android:key="@string/pref_search_include_your_book"
+        android:title="@string/pref_search_include_your_book"
+        android:summary="@string/show_search_include_summary"/>
+    
 </PreferenceScreen>

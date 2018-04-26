@@ -50,6 +50,20 @@
             android:ems="10"
             android:hint="@string/password"
             android:inputType="textPassword" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <ImageButton
+                android:id="@+id/ib_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_location_black"/>
+            <TextView
+                android:id="@+id/tv_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
 
         <EditText
             android:id="@+id/tv_city"
@@ -58,6 +72,7 @@
             android:ems="10"
             android:hint="@string/your_city"
             android:inputType="none"
+            android:visibility="gone"
             />
 
         <EditText

@@ -6,8 +6,8 @@
         android:icon="@drawable/ic_local_phone_black"
         android:title="@string/call"
         app:showAsAction="always"/>
-    <item
+    <!--<item
         android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 </menu>

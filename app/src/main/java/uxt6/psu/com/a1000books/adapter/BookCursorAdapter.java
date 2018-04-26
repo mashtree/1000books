@@ -90,6 +90,7 @@ public class BookCursorAdapter extends RecyclerView.Adapter<BookCursorAdapter.Bo
             public void onClick(View view) {
                 Intent intent = new Intent(activity, BookDetailActivity.class);
                 intent.putExtra(BookDetailActivity.EXTRA_BOOK, book.getId());
+                intent.putExtra(BookDetailActivity.EXTRA_GPLUS, book.getIsGPlusShared());
                 Log.d(BookCursorAdapter.class.getSimpleName(), "onClick: _id="+book.getId());
                 //activity.startActivityForResult(intent, BookDetailActivity.REQUEST_UPLOAD);
                 activity.startActivity(intent);

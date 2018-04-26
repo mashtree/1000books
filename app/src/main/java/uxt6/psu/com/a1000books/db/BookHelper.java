@@ -92,6 +92,7 @@ public class BookHelper implements DBHelper.EntityHelper{
         initialValues.put(COVER, book.getCover());
         initialValues.put(GET_FROM, book.getGet_from());
         initialValues.put(RATING, book.getRating());
+        initialValues.put(GPLUS,book.getIsGPlusShared());
         initialValues.put(DATE, book.getCreated_at());
         return database.insert(DATABASE_TABLE, null, initialValues);
     }
@@ -106,6 +107,7 @@ public class BookHelper implements DBHelper.EntityHelper{
         args.put(COVER, book.getCover());
         args.put(GET_FROM, book.getGet_from());
         args.put(RATING, book.getRating());
+        args.put(GPLUS, book.getIsGPlusShared());
         args.put(DATE, book.getCreated_at());
 
         return database.update(DATABASE_TABLE,args, _ID+

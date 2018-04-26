@@ -175,7 +175,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             edtReview.setError(getString(R.string.empty_field));
         }
 
-        if (review.length() < 200) {
+        if (review.length() < 100) {
             isEmpty = true;
             edtReview.setError(getString(R.string.at_least_200));
         }
@@ -189,6 +189,7 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             values.put(GET_FROM, getFrom);
             values.put(REVIEW, review);
             values.put(RATING, rate);
+
             values.put(COVER, title+filename+"."+extension);
             imgCover.buildDrawingCache();
             Bitmap bitmap = imgCover.getDrawingCache();
@@ -197,12 +198,16 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
                     .setDirectoryName("bookCovers")
                     .save(bitmap);
             if (isEdit) {
+                values.put(GPLUS, book.getIsGPlusShared());
                 getContentResolver().update(getIntent().getData(), values, null, null);
                 setResult(RESULT_UPDATE);
                 finish();
             } else {
+                Log.d(FormAddUpdateBookActivity.class.getSimpleName(), "onClick: selected item = "+String.valueOf(rating));
+                values.put(GPLUS, 0);
                 values.put(DATE, getCurrentDate());
-                getContentResolver().insert(DatabaseContract.BOOK_CONTENT_URI, values);
+                //getContentResolver().insert(DatabaseContract.BOOK_CONTENT_URI, values);
+                helper.insertProvider(values);
                 setResult(RESULT_ADD);
                 finish();
             }
@@ -211,6 +216,9 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
 
     private String extension = "png";
     private String filename;
+    private final int MAX_HEIGHT = 400;
+    private final int MAX_WIDTH = 300;
+    private final String TAG = FormAddUpdateBookActivity.class.getSimpleName();
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -223,8 +231,18 @@ public class FormAddUpdateBookActivity extends AppCompatActivity implements View
             try {
                 //getting bitmap object from uri
                 Bitmap bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+                int imgHeight = bitmap.getHeight();
+                int imgWidth = bitmap.getWidth();
+                Log.d(TAG, "onActivityResult: image height="+imgHeight+" image size="+bitmap.getByteCount());
+                Bitmap newBitmap = bitmap;
+                if(imgHeight>MAX_HEIGHT || imgWidth>MAX_WIDTH){
+
+                    newBitmap = Bitmap.createScaledBitmap(bitmap, bitmap.getWidth()*MAX_HEIGHT/imgHeight, MAX_HEIGHT, false);
+                    Log.d(TAG, "onActivityResult: img size "+newBitmap.getByteCount());
+                }
                 //displaying selected image to imageview
-                imgCover.setImageBitmap(bitmap);
+                //displaying selected image to imageview
+                imgCover.setImageBitmap(newBitmap);
                 extension = getMimeType(this, imageUri);
                 File file= new File(imageUri.getPath());
                 filename = file.getName();

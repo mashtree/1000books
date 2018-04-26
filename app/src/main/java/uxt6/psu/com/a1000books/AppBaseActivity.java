@@ -62,15 +62,14 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
         for(int i = 0; i < drawerMenu.size(); i++) {
             drawerMenu.getItem(i).setOnMenuItemClickListener(this);
         }
-        // and so on...
+
         UserPreferences prefs = new UserPreferences(this);
-        prefs.setPicture(EndPoints.ROOT_URL+"readers/b00307d6596b6aa31ca8a6fc238753371814567953.jpg");
-        prefs.doCommit();
+
         Log.d(AppBaseActivity.class.getSimpleName(), "onCreate: "+prefs.getPicture());
         View view = navigation_view.getHeaderView(0);
         yourImage = (CircleImageView) view.findViewById(R.id.your_image);
         yourName = (TextView) view.findViewById(R.id.your_name);
-        if(prefs.getPicture()!=null){
+        if(prefs.getPicture()!=null &&  prefs.getPicture()!=""){
             Picasso.with(this)
                     .load(prefs.getPicture())
                     .placeholder(R.drawable.ic_photo_black_24dp)
@@ -160,6 +159,9 @@ public abstract class AppBaseActivity extends AppCompatActivity implements MenuI
             //    break;
             case R.id.nav_your_profile:
                 intent = new Intent(AppBaseActivity.this, YourProfileActivity.class);
+                break;
+            case R.id.menu_settings:
+                intent = new Intent(AppBaseActivity.this, SettingActivity.class);
                 break;
             default:
                 // do nothing at this moment

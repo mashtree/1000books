@@ -32,6 +32,8 @@ public class DatabaseContract {
         public static String COVER = "cover";
         //Book review date -- upload
         public static String DATE = "created_at";
+        //Book G+ shared
+        public static String GPLUS = "gplus";
     }
 
     public static final class ReaderColumns implements BaseColumns{
@@ -72,4 +74,5 @@ public class DatabaseContract {
     public static double getColumnDouble(Cursor cursor, String columnName){
         return cursor.getLong(cursor.getColumnIndex(columnName));
     }
+
 }

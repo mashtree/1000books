@@ -6,7 +6,8 @@
         android:title="@string/save"
         android:icon="@drawable/ic_save_white"
         app:showAsAction="always"/>
-    <item android:id="@+id/menu_settings"
+    <!--<item
+        android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 </menu>

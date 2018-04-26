@@ -33,6 +33,7 @@ public class DBHelper extends SQLiteOpenHelper {
                     +" %s TEXT, " //should NOT NULL
                     +" %s TEXT, " //should NOT NULL
                     +" %s TEXT, " //should NOT NULL
+                    +" %s TEXT, " //should NOT NULL
                     +" %s TEXT)", //should NOT NULL
             DatabaseContract.TABLE_BOOK,
             DatabaseContract.BookColumns._ID,
@@ -44,6 +45,7 @@ public class DBHelper extends SQLiteOpenHelper {
             DatabaseContract.BookColumns.REVIEW,
             DatabaseContract.BookColumns.COVER,
             DatabaseContract.BookColumns.RATING,
+            DatabaseContract.BookColumns.GPLUS,
             DatabaseContract.BookColumns.DATE
     );
 

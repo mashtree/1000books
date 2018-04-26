@@ -11,8 +11,8 @@
         android:icon="@drawable/ic_plusone_medium_off_client"
         android:title="@string/gplus"
         app:showAsAction="always"/>
-    <item
+    <!--<item
         android:id="@+id/menu_settings"
         android:title="@string/menu_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never" />-->
 </menu>

@@ -26,10 +26,16 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
+import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.android.gms.plus.PlusShare;
+import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.nostra13.universalimageloader.core.listener.SimpleImageLoadingListener;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,7 +44,9 @@ import org.json.JSONObject;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import butterknife.BindView;
@@ -53,7 +61,15 @@ import uxt6.psu.com.a1000books.utility.EndPoints;
 import uxt6.psu.com.a1000books.utility.ImageSaver;
 import uxt6.psu.com.a1000books.utility.VolleyMultipartRequest;
 
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.AUTHOR;
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.COVER;
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.DATE;
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.GET_FROM;
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.PUBLISHER;
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.RATING;
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.REVIEW;
 import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.SERVER_ID;
+import static uxt6.psu.com.a1000books.db.DatabaseContract.BookColumns.TITLE;
 
 public class BookDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -76,8 +92,12 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     public static final int RESULT_UPLOAD = 401;
     public static final int REQUEST_PLUS = 500;
     private int id;
+    private int isGPlusShared;
+
+    private boolean isSharedOnGPlus = false;
 
     public static final String EXTRA_BOOK = "uxt6.psu.com.a1000books.EXTRA_BOOK";
+    public static final String EXTRA_GPLUS = "uxt6.psu.com.a1000books.EXTRA_GPLUS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,6 +106,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
         ButterKnife.bind(this);
         btUpload.setOnClickListener(this);
         id = getIntent().getIntExtra(EXTRA_BOOK, 0);
+        isGPlusShared = getIntent().getIntExtra(EXTRA_GPLUS, 0);
         prefs = new UserPreferences(this);
         helper = new BookHelper(this);
         helper.open();
@@ -211,10 +232,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
                 }) {
 
             /*
-            * If you want to add more parameters with the image
-            * you can do it here
-            * here we have only one parameter with the image
-            * which is tags
+            *
             * */
             @Override
             protected Map<String, String> getParams() throws AuthFailureError {
@@ -262,7 +280,12 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
     @Override
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.activity_detail_book, menu);
-        return true;
+        if(isGPlusShared>0){
+            MenuItem item = menu.findItem(R.id.menu_gplus);
+            item.setVisible(false);
+        }
+
+        return super.onCreateOptionsMenu(menu);
     }
 
     @Override
@@ -276,9 +299,9 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
                 setResult(RESULT_UPLOAD);
                 finish();
             }
-        }else if(item.getItemId()==R.id.menu_settings){
+        //}else if(item.getItemId()==R.id.menu_settings){
 
-        }else if(item.getItemId()==R.id.menu_gplus){
+        }else if(item.getItemId()==R.id.menu_gplus){ //upload gplus
             if(book.getServerId()>0){
                 StringBuilder sb = new StringBuilder();
                 sb.append(book.getTitle());
@@ -286,6 +309,7 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
                 sb.append("by "+book.getAuthor()+"\n");
                 sb.append(book.getReview());
                 gplusUpload(sb.toString());
+                setIsUploadOnGPlus(book.getServerId());
             }else{
                 Toast.makeText(BookDetailActivity.this, "the book need to be uploaded", Toast.LENGTH_LONG).show();
             }
@@ -336,5 +360,46 @@ public class BookDetailActivity extends AppCompatActivity implements View.OnClic
 
             }
         }.execute();
+    }
+
+    private void setIsUploadOnGPlus(int serverId){
+        book.setIsGPlusShared(1);
+        helper.update(book);
+        updateOnServerData(serverId);
+    }
+
+    private void updateOnServerData(final int serverId){
+        final String id = String.valueOf(serverId);
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = EndPoints.POST_BOOK_GPLUS;
+        StringRequest postRequest = new StringRequest(Request.Method.POST, url,
+                new Response.Listener<String>()
+                {
+                    @Override
+                    public void onResponse(String result) {
+                        // response
+                        Toast.makeText(BookDetailActivity.this, "posted succesfully", Toast.LENGTH_LONG).show();
+                    }
+                },
+                new Response.ErrorListener()
+                {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        // error
+                        Log.d("Error.Response", error.toString());
+                    }
+                }
+        ) {
+            @Override
+            protected Map<String, String> getParams()
+            {
+                Map<String, String>  params = new HashMap<String, String>();
+                params.put("id", id);
+                params.put("gplus", String.valueOf(0));
+
+                return params;
+            }
+        };
+        queue.add(postRequest);
     }
 }

@@ -3,6 +3,7 @@ package uxt6.psu.com.a1000books;
 import android.app.LoaderManager;
 import android.os.Bundle;
 import android.content.Loader;
+import android.preference.PreferenceManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -36,7 +37,9 @@ public class SearchBookActivity extends AppBaseActivity implements LoaderManager
     @BindView(R.id.tv_info) TextView tvInfo;
 
     public static final String EXTRAS_KEYWORD = "uxt6.psu.com.a1000books.KEYWORD";
+    public static final String EXTRAS_INCLUDE = "uxt6.psu.com.a1000books.INCLUDE";
     private BookListAdapter adapter;
+    private boolean filtered = false;
 
     private String selection;
 
@@ -45,6 +48,8 @@ public class SearchBookActivity extends AppBaseActivity implements LoaderManager
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_book);
         ButterKnife.bind(this);
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+        filtered = PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.pref_search_include_your_book),false);
 
         adapter = new BookListAdapter(this);
         //adapter.notifyDataSetChanged();
@@ -86,6 +91,7 @@ public class SearchBookActivity extends AppBaseActivity implements LoaderManager
             }
             Bundle bundle = new Bundle();
             bundle.putString(EXTRAS_KEYWORD, keyword);
+            bundle.putBoolean(EXTRAS_INCLUDE, filtered);
             getLoaderManager().restartLoader(0, bundle, SearchBookActivity.this);
         }
     }
@@ -105,13 +111,14 @@ public class SearchBookActivity extends AppBaseActivity implements LoaderManager
         String keyword = "";
         if(bundle!=null){
             keyword = bundle.getString(SearchBookActivity.EXTRAS_KEYWORD);
+            filtered = bundle.getBoolean(SearchBookActivity.EXTRAS_INCLUDE);
         }
         if(rbTitle.isChecked()){
             selection = DatabaseContract.BookColumns.TITLE;
         }else{
             selection = DatabaseContract.BookColumns.AUTHOR;
         }
-        return new BookAsyncTaskLoader(this, keyword, selection);
+        return new BookAsyncTaskLoader(this, keyword, filtered, selection);
     }
 
     @Override
@@ -139,9 +146,9 @@ public class SearchBookActivity extends AppBaseActivity implements LoaderManager
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item){
-        if(item.getItemId()==R.id.menu_settings){
+        //if(item.getItemId()==R.id.menu_settings){
 
-        }
+        //}
         return super.onOptionsItemSelected(item);
     }
 

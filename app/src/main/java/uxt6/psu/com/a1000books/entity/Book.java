@@ -24,6 +24,7 @@ public class Book implements Parcelable {
     private String publisher;
     private String get_from;
     private int rating;
+    private int isGPlusShared;
     private String cover;
     private String created_at;
     private String reader;
@@ -43,6 +44,7 @@ public class Book implements Parcelable {
             get_from = object.getString("get_from");
             rating = object.getInt("rating");
             cover = object.getString("cover");
+            isGPlusShared = 0;
             created_at = object.getString("created_at");
             reader = object.getString("reader_name");
         }catch(Exception e){
@@ -61,6 +63,7 @@ public class Book implements Parcelable {
         publisher = DatabaseContract.getColumnString(cursor, PUBLISHER);;
         get_from = DatabaseContract.getColumnString(cursor, GET_FROM);;
         rating = DatabaseContract.getColumnInt(cursor, RATING);;
+        isGPlusShared = DatabaseContract.getColumnInt(cursor, GPLUS);
         cover = DatabaseContract.getColumnString(cursor, COVER);;
         created_at = DatabaseContract.getColumnString(cursor, DATE);;
         reader = "";
@@ -70,13 +73,14 @@ public class Book implements Parcelable {
         id = in.readInt();
         title = in.readString();
         serverId = in.readInt();
-        author = in.readString();;
-        publisher = in.readString();;
+        author = in.readString();
+        publisher = in.readString();
         review = in.readString();;
-        get_from = in.readString();;
-        cover = in.readString();;
-        rating = in.readInt();;
-        created_at = in.readString();;
+        get_from = in.readString();
+        cover = in.readString();
+        rating = in.readInt();
+        isGPlusShared = in.readInt();
+        created_at = in.readString();
         reader = "";
     }
 
@@ -109,6 +113,7 @@ public class Book implements Parcelable {
         parcel.writeString(cover);
         parcel.writeString(created_at);
         parcel.writeInt(rating);
+        parcel.writeInt(isGPlusShared);
         parcel.writeString(reader);
     }
 
@@ -160,9 +165,15 @@ public class Book implements Parcelable {
         this.get_from = get_from;
     }
 
-    public int getRating() {
-        return rating;
+    public int getIsGPlusShared() {
+        return isGPlusShared;
     }
+
+    public void setIsGPlusShared(int isGPlusShared) {
+        this.isGPlusShared = isGPlusShared;
+    }
+
+    public int getRating() { return rating; }
 
     public void setRating(int rating) {
         this.rating = rating;

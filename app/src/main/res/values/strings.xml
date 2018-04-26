@@ -48,6 +48,8 @@
     <string name="email_constraint">must be email address</string>
     <string name="gplus">share on google plus</string>
     <string name="show_uploaded_summary">only display the books that have been shared to the server</string>
+    <string name="pref_search_include_your_book">search include your book</string>
+    <string name="show_search_include_summary">display search result include your book\'s review</string>
     <string-array name="rating_array">
         <item>1</item>
         <item>2</item>

@@ -16,7 +16,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
- * Created by aisyahumar on 3/4/2018.
+ * source :
+ * https://github.com/anggadarkprince/infogue-android/blob/master/app/src/main/java/com/sketchproject/infogue/modules/VolleyMultipartRequest.java
  */
 
 public class VolleyMultipartRequest extends Request<NetworkResponse> {

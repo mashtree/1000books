@@ -91,7 +91,6 @@ public class CommentAdapter extends BaseAdapter{
         /**
          * retrieve poster
          */
-        //String url = "http://image.tmdb.org/t/p/w185/"+mData.get(index).getPosterPath();
 
         Picasso.with(context)
                 .load(mData.get(index).getCommentatorUrlPhoto())

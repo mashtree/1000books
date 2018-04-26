@@ -19,6 +19,7 @@ import java.util.Map;
 import cz.msebera.android.httpclient.Header;
 import uxt6.psu.com.a1000books.SearchBookActivity;
 import uxt6.psu.com.a1000books.entity.Book;
+import uxt6.psu.com.a1000books.settings.UserPreferences;
 import uxt6.psu.com.a1000books.utility.EndPoints;
 
 /**
@@ -34,12 +35,24 @@ public class BookAsyncTaskLoader extends AsyncTaskLoader<List<Book>> {
     private String url;
     private final String urls = EndPoints.SEARCH_BOOK_URL;
     private String selection;
+    private int includeOwnBook = 0;
 
     public BookAsyncTaskLoader(Context context, String keyword, String selection) {
         super(context);
         onContentChanged();
 
         action = SearchBookActivity.EXTRAS_KEYWORD;
+        this.selection=selection;
+
+        this.keyword = keyword;
+    }
+
+    public BookAsyncTaskLoader(Context context, String keyword, boolean includeOwnBook, String selection) {
+        super(context);
+        onContentChanged();
+
+        action = SearchBookActivity.EXTRAS_KEYWORD;
+        this.includeOwnBook = includeOwnBook?1:0;
         this.selection=selection;
 
         this.keyword = keyword;
@@ -81,6 +94,10 @@ public class BookAsyncTaskLoader extends AsyncTaskLoader<List<Book>> {
 
         final List<Book> books = new ArrayList<>();
         String url = EndPoints.SEARCH_BOOK_URL + keyword;
+        if(includeOwnBook!=1){
+            UserPreferences prefs = new UserPreferences(getContext());
+            url = url + "&id="+prefs.getReaderServerId();
+        }
         if(selection!=null){
             url = url+"&filter="+selection;
         }
@@ -97,7 +114,7 @@ public class BookAsyncTaskLoader extends AsyncTaskLoader<List<Book>> {
             public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
                 try {
                     String result = new String(responseBody);
-                    System.out.println(result);
+                    Log.d(BookAsyncTaskLoader.class.getSimpleName(), "onSuccess: "+result);
                     JSONObject response = new JSONObject(new String(responseBody));
                     JSONArray list = response.getJSONArray("books");
                     for (int i = 0; i < list.length(); i++) {

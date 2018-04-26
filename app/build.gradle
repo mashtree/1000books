@@ -8,6 +8,7 @@ android {
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
+        multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -24,11 +25,11 @@ dependencies {
     implementation 'com.android.support:appcompat-v7:26.1.0'
     implementation 'com.android.support.constraint:constraint-layout:1.0.2'
     // butterknife
-    implementation 'com.jakewharton:butterknife:8.8.1'
-    // circle image view
-    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation('com.jakewharton:butterknife:8.8.1'){
+        exclude group:"com.android.support"
+    }
     // firebase
-    implementation 'com.google.firebase:firebase-core:11.8.0'
+    //implementation 'com.google.firebase:firebase-core:11.8.0'
     // navigation
     implementation 'com.android.support:design:26.+'
     //picasso async task retrieving image from internet
@@ -38,20 +39,30 @@ dependencies {
     //adding volley library
     implementation 'com.android.volley:volley:1.1.0'
     // asynctask
-    implementation 'com.loopj.android:android-async-http:1.4.9'
-    // picassor
-    implementation 'com.squareup.picasso:picasso:2.5.2'
+    implementation ('com.loopj.android:android-async-http:1.4.9'){
+        exclude group: "com.android.support"
+    }
+    // picasso
+    implementation('com.squareup.picasso:picasso:2.5.2'){
+        exclude group: "com.android.support"
+    }
     // circle image view
-    implementation 'de.hdodenhof:circleimageview:2.1.0'
+    implementation ('de.hdodenhof:circleimageview:2.1.0'){
+        exclude group: "com.android.support"
+    }
     // expandable text view
-    implementation 'at.blogc:expandabletextview:1.0.5'
-    //
+    implementation ('at.blogc:expandabletextview:1.0.5'){
+        exclude group: "com.android.support"
+    }
+    // google location service
     implementation 'com.google.android.gms:play-services-location:11.8.0'
     implementation 'com.google.android.gms:play-services-maps:11.8.0'
     implementation 'com.google.android.gms:play-services-analytics:11.8.0'
-    implementation 'com.google.android.gms:play-services:11.8.0'
+    implementation ('com.google.android.gms:play-services:11.8.0'){
+        exclude group: "com.android.support"
+    }
     implementation 'com.google.android.gms:play-services-auth:11.8.0'
-    //
+    // image loader
     implementation 'com.nostra13.universalimageloader:universal-image-loader:1.9.5'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     testImplementation 'junit:junit:4.12'

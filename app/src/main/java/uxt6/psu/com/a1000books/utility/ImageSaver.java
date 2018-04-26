@@ -14,6 +14,7 @@ import java.io.IOException;
 
 /**
  * Created by Ilya Gazman on 3/6/2016.
+ * https://stackoverflow.com/questions/17674634/saving-and-reading-bitmaps-images-from-internal-memory-in-android
  */
 public class ImageSaver {
 

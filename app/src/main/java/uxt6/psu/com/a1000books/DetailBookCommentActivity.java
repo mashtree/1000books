@@ -137,6 +137,7 @@ public class DetailBookCommentActivity extends AppCompatActivity {
 
                 if (jsonString == null || jsonString == "") {
                     jsonString = getJsonFromServer(url);
+                    Log.d(DetailBookCommentActivity.class.getSimpleName(), "doInBackground: "+url);
                 }
             } catch (IOException e) {
                 // TODO Auto-generated catch block
@@ -156,25 +157,32 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                 JSONObject response = null;
                 JSONObject bookJson = null;
                 JSONArray commentsJson = null;
+                int star = 0;
                 try {
                     response = new JSONObject(jsonString);
                     bookJson = response.getJSONObject("books");
                     commentsJson = response.getJSONArray("comments");
                     for (int i = 0; i < commentsJson.length(); i++) {
                         JSONObject commentObj = commentsJson.getJSONObject(i);
-
+                        star += commentObj.getInt("review_rating");
                         Comment comment = new Comment(commentObj);
                         comments.add(comment);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                if(comments.size()>0){
+                    star = star/comments.size();
+                    tvRate.setText(String.valueOf(star)+"/"+comments.size());
+                }else{
+                    tvRate.setText("0/0");
+                }
 
                 if(bookJson!=null){
                     try {
                         tvTitle.setText(bookJson.getString("title"));
                         tvAuthor.setText("by "+bookJson.getString("author"));
-                        tvRate.setText(" "+bookJson.getString("rating"));
+                        //tvRate.setText(" "+bookJson.getString("rating"));
                         //tvReview.setText(bookJson.getString("review"));
                         if(bookJson.getString("review").length()>=400){
                             expandableTextView.setText(bookJson.getString("review").substring(0, 400)+"...");
@@ -255,6 +263,13 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                                 Log.d(DetailBookCommentActivity.class.getSimpleName(), "ExpandableTextView collapsed");
                             }
                         });
+                        UserPreferences prefs = new UserPreferences(DetailBookCommentActivity.this);
+                        Log.d(DetailBookCommentActivity.class.getSimpleName(), "onPostExecute: "+(bookJson.getInt("reader_id")==prefs.getReaderServerId()));
+                        if(bookJson.getInt("reader_id")==prefs.getReaderServerId()){
+                            btnSubmitComment.setVisibility(View.GONE);
+                            ratingBar.setVisibility(View.GONE);
+                            edtComment.setVisibility(View.GONE);
+                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -308,11 +323,13 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                         intent.putExtra(DetailBookCommentActivity.EXTRA_BOOK, book);
                         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
-                        /*try {
+                        /*int star = 0;
+                        try {
                             JSONObject obj = new JSONObject(new String(response.data));
                             JSONArray commentsJson = obj.getJSONArray("comments");
                             for (int i = 0; i < commentsJson.length(); i++) {
                                 JSONObject commentObj = commentsJson.getJSONObject(i);
+                                star += commentObj.getInt("review_rating");
 
                                 Comment comment = new Comment(commentObj);
                                 comments.add(comment);
@@ -323,9 +340,17 @@ public class DetailBookCommentActivity extends AppCompatActivity {
                                 adapter.setmData(comments);
                                 //lvComments.setAdapter(adapter);
                                 adapter.notifyDataSetChanged();
+                                lvComments.setAdapter(adapter);
+                                //lvComments.setSelection(adapter.getCount() - 1);
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        }
+                        if(comments.size()>0) {
+                            star = star / comments.size();
+                            tvRate.setText(String.valueOf(star) + "/" + comments.size());
+                        }else{
+                            tvRate.setText("0/0");
                         }*/
                     }
                 },

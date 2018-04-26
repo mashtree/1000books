@@ -251,10 +251,10 @@ implements View.OnClickListener{
             case R.id.menu_refresh:
                 onAsyncLoadBooks(filtered);
                 break;
-            case R.id.menu_settings:
+            /*case R.id.menu_settings:
                 Intent intentSetting = new Intent(BookActivity.this, SettingActivity.class);
                 startActivity(intentSetting);
-                break;
+                break;*/
             default:
                 return super.onOptionsItemSelected(item);
         }
