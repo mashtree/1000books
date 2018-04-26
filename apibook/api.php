@@ -1,10 +1,6 @@
 <?php 
 	
 	//Constants for database connection
-	//define('DB_HOST','sql202.epizy.com');
-	//define('DB_USER','epiz_21775052');
-	//define('DB_PASS','saftarina1');
-	//define('DB_NAME','epiz_21775052_apibook');
 
 	define('DB_HOST','localhost');
 	define('DB_USER','root');
